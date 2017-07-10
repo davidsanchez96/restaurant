@@ -8,7 +8,7 @@ export default DrawerIcon = ({navigation}) => {
             <TouchableOpacity onPress={() => {
                 navigation.navigate('DrawerOpen');
             } }>
-                <Icon ios='ios-menu' android="md-menu" style={{padding: 10, marginLeft: 10}}/>
+                <Icon ios='ios-menu' android="md-menu" style={{padding: 10, marginLeft: 10, color:"#fff"}}/>
             </TouchableOpacity>
         </View>
     );

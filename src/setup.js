@@ -27,8 +27,10 @@ export default class ChesterWithRedux extends Component {
                     <Chester />
 
 
+
                 </Provider>
             </StyleProvider>
+
         );
     }
 }

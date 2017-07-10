@@ -43,6 +43,7 @@ export default function (state:State = initialState, action) {
         return {
             ...state,
             sent: moment(),
+            token:action.payload.token,
             sendCodePending:false
         };
     }
@@ -62,7 +63,8 @@ export default function (state:State = initialState, action) {
         return {
             ...state,
             sent: moment(),
-            confirmCodePending:false
+            confirmCodePending:false,
+            showSign: false
         };
     }
     if (action.type === CONFIRM_CODE_PENDING) {

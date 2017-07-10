@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "my-new-project",
+    "name": "chester-app",
     "description": "No description",
-    "slug": "my-new-project",
+    "slug": "chester-app",
     "privacy": "public",
     "sdkVersion": "18.0.0",
     "version": "1.0.0",

@@ -9,9 +9,15 @@ export default class SignPhoneInput extends React.Component {
         super(props);
     }
 
+    state = {
+        isValid:false
+    }
 
     changeNumber(number) {
-        this.props.onChangePhoneNumber(number)
+        this.props.onChangePhoneNumber(number.substring(1));
+        this.setState({
+            isValid:this.isValidNumber()
+        })
     }
 
     isValidNumber() {
@@ -19,9 +25,11 @@ export default class SignPhoneInput extends React.Component {
     }
 
     render() {
+
+        let color = this.state.isValid? platform.brandWarning : platform.brandOutline;
         return (
             <View style={styles.phone}>
-                <PhoneInput ref='phone' initialCountry="ru" textStyle={styles.phoneInput}
+                <PhoneInput ref='phone' initialCountry="ru" textStyle={{...styles.phoneInput,color}}
                             onChangePhoneNumber={(number) => this.changeNumber(number)}/>
             </View>
 
@@ -32,9 +40,9 @@ export default class SignPhoneInput extends React.Component {
 
 const styles = {
     phoneInput: {
-        fontSize:platform.inputFontSize,
-        color:platform.textColor,
-        fontFamily:platform.fontFamily
+        fontSize: platform.inputFontSize,
+        color: platform.textColor,
+        fontFamily: platform.fontFamily
     }
 
 };

@@ -1,3 +1,4 @@
+import {AuthService} from "./api/auth";
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_OUT = 'SIGN_OUT';
 export const SET_SIGN_STATE = 'SET_SIGN_STATE';
@@ -11,7 +12,6 @@ export const CONFIRM_CODE = 'CONFIRM_CODE';
 export const CONFIRM_CODE_PENDING = 'CONFIRM_CODE_PENDING';
 export const CONFIRM_CODE_FULFILLED = 'CONFIRM_CODE_FULFILLED';
 export const CONFIRM_CODE_REJECTED = 'CONFIRM_CODE_REJECTED';
-
 
 
 const delay = (ms) => new Promise(resolve =>
@@ -45,7 +45,7 @@ export function sendCodeAction(promise) {
 
 export const sendCode = (number) => {
     return dispatch => {
-        let promise = delay(4000);
+        let promise = AuthService.sendCode(number);
         dispatch(sendCodeAction(promise));
         return promise;
     }
@@ -58,9 +58,9 @@ export function confirmCodeAction(promise) {
     }
 }
 
-export const confirmCode = (number) => {
+export const confirmCode = (code) => {
     return dispatch => {
-        let promise = delay(4000);
+        let promise = AuthService.confirmCode(code);
         dispatch(confirmCodeAction(promise));
         return promise;
     }

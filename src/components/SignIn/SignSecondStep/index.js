@@ -2,11 +2,12 @@ import React from 'react';
 import {Button, Container, Form, Input, Item, Text, View} from 'native-base';
 import {connect} from "react-redux";
 import {dispatch} from "redux";
-import {confirmCode, signIn} from "../../../actions/user";
+import {confirmCode, setSignState, signIn} from "../../../actions/user";
 import moment from "moment";
 import Spinner from "react-native-loading-spinner-overlay";
 import {Image} from "react-native";
 import {signStackStyle} from "../../../routers/SignStack";
+import H3 from "../../../../native-base-theme/components/H3";
 
 class SignSecondStep extends React.Component {
 
@@ -70,14 +71,14 @@ class SignSecondStep extends React.Component {
                     <View style={styles.container}>
 
 
-                        <Spinner visible={this.props.pending} textContent={"Подождите..."} textStyle={{color: '#FFF'}}/>
+                        <Spinner visible={this.props.pending} textStyle={{color: '#FFF'}}/>
 
                         <View style={styles.image}>
                         </View>
 
                         <View style={styles.message}>
-                            <Text style={styles.messageText}>Код подтверждения был отправлен на номер
-                                +{this.props.navigation.state.params.number}!</Text>
+                            <Text style={{...styles.messageText, ...H3()}}>Код подтверждения был отправлен на номер
+                                {' +'+this.props.navigation.state.params.number}!</Text>
                         </View>
 
 
@@ -93,15 +94,15 @@ class SignSecondStep extends React.Component {
 
                             </View>
                         </View>
-                        <View>
+                        <View style={styles.resendCode}>
                             {
                                 this.state.sec === 0
                                     ?
-                                    <Button transparent warning onPress={() => {
+                                    <View><Button transparent warning onPress={() => {
                                         this.props.signInAfter()
                                     }}>
-                                        <Text>Отправить код повторно></Text>
-                                    </Button>
+                                        <Text  style={styles.resendCodeButton}>Отправить код повторно></Text>
+                                    </Button></View>
                                     : <Text>Отправить код повторно 0:{this.state.sec}</Text>
                             }
 
@@ -130,6 +131,7 @@ class SignSecondStep extends React.Component {
 
 function bindAction(dispatch) {
     return {
+        signInAfter: () => dispatch(setSignState(false)),
         signIn: () => dispatch(signIn()),
         confirmCode: (text) => dispatch(confirmCode(text))
     };
@@ -148,14 +150,16 @@ const styles = {
     },
     image: {
         height: 150,
+        paddingTop: 40,
 
     },
-    button: {
-        paddingTop: 20,
+    message: {
+        paddingTop: 60,
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingRight: 15,
-        paddingLeft: 15
+    },
+    messageText: {
+        width: 250,
+        textAlign: 'center'
     },
     phoneBlock: {
         borderColor: '#d6d6d6',
@@ -169,14 +173,22 @@ const styles = {
     codeItem: {
         borderColor: 'transparent',
     },
-    message: {
+    resendCode: {
         alignItems: 'center',
+        paddingTop: 20,
     },
-    messageText: {
-        width: 250,
-        textAlign: 'center',
-        paddingBottom: 20,
-    }
+    resendCodeButton: {
+        fontSize: 16
+    },
+    button: {
+        paddingTop: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingRight: 15,
+        paddingLeft: 15
+    },
+
+
 };
 
 const SignSecondStepSwag = connect(mapStateToProps, bindAction)(SignSecondStep);

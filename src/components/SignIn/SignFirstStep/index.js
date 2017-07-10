@@ -1,19 +1,25 @@
 import React from 'react';
-import {Button, Container, Form, Input, Item, Label, Spinner, Text, View} from 'native-base';
+import {Button, Container, Form, Input, Item, Label, Text, View} from 'native-base';
 import {sendCode, setSignState} from "../../../actions/user";
 import connect from "react-redux/es/connect/connect";
-import {Constants} from 'expo';
+import {Constants, Console} from 'expo';
 import PhoneInput from "react-native-phone-input";
-import {Image} from "react-native";
+import {Image, TouchableWithoutFeedback} from "react-native";
 import {signStackStyle} from "../../../routers/SignStack";
 import SignPhoneInput from "../SignPhoneInput/index";
+import H3 from "../../../../native-base-theme/components/H3";
+import platform from "../../../../native-base-theme/variables/platform";
+import Spinner from "react-native-loading-spinner-overlay";
+import { Keyboard } from 'react-native';
+
 class SignFirstStep extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             number: null,
-            valid: false
+            valid: false,
+            borderColor: platform.brandOutline
         };
     }
 
@@ -21,69 +27,78 @@ class SignFirstStep extends React.Component {
     changeNumber(number) {
         this.setState({
             number: number,
-            valid: this.refs.phone.isValidNumber()
+            valid: this.refs.phone.isValidNumber(),
+            borderColor: this.refs.phone.isValidNumber() ? platform.brandWarning : platform.brandOutline
         });
         this.number = number;
     }
 
-    sendCode() {
+    async sendCode() {
 
-        this.props.sendCode(this.number).then(() => {
-            this.props.navigation.navigate('SignSecond', {number: this.number})
-        })
+        let result = await this.props.sendCode(this.number);
+
+        this.props.navigation.navigate('SignSecond', {number: this.number})
     }
 
 
     render() {
         return (
-            <Container >
-                <Image source={require('../../../../assets/images/login&registration/login-bg.png')} style={signStackStyle}>
-                    <View style={styles.container}>
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                <Container >
+                    <Image source={require('../../../../assets/images/login&registration/login-bg.png')}
+                           style={signStackStyle}>
+                        <View style={styles.container}>
+                            <Spinner visible={this.props.sendCodePending}
+                                     textStyle={{color: '#FFF'}}/>
 
-                        <View style={styles.image}>
-                            <Image source={require('../../../../assets/images/login&registration/login-logo.png')}></Image>
-                        </View>
-
-                        <View style={styles.message}>
-                            <Text style={styles.messageText} theme={h1}>Введите свой номер телефона, чтобы вступить в программу
-                                лояльности и получать скидки!</Text>
-                        </View>
-
-
-                        <View style={styles.phoneBlock}>
-
-
-                            <View style={styles.phone}>
-                              <SignPhoneInput ref="phone" onChangePhoneNumber={(number) => this.changeNumber(number)}/>
+                            <View style={styles.image}>
+                                <Image
+                                    source={require('../../../../assets/images/login&registration/login-logo.png')}></Image>
                             </View>
-                        </View>
 
-                        <View style={styles.button}>
+                            <View style={styles.message}>
+                                <Text style={{...styles.messageText, ...H3()}}>Введите свой номер телефона, чтобы
+                                    вступить в
+                                    программу
+                                    лояльности и получать скидки!
+                                </Text>
+                            </View>
 
 
-                            {this.props.sendCodePending ? <Spinner/>
-                                : <Button block rounded warning disabled={!this.state.valid} onPress={() => {
+                            <View style={{...styles.phoneBlock, borderColor: this.state.borderColor}}>
+
+
+                                <View style={styles.phone}>
+                                    <SignPhoneInput ref="phone"
+                                                    onChangePhoneNumber={(number) => this.changeNumber(number)}/>
+                                </View>
+                            </View>
+
+                            <View style={styles.button}>
+
+
+                                <Button block rounded warning disabled={!this.state.valid} onPress={() => {
                                     this.sendCode()
                                 }}>
                                     <Text>Далее ></Text>
                                 </Button>
-                            }
 
 
-                            <View>
-                                <Button transparent warning onPress={() => {
-                                    this.props.signInAfter()
-                                }}>
-                                    <Text>Вступить в клуб позже ></Text>
-                                </Button>
+                                <View>
+                                    <Button transparent warning onPress={() => {
+                                        this.props.signInAfter()
+                                    }}>
+                                        <Text>Вступить в клуб позже ></Text>
+                                    </Button>
+                                </View>
+
                             </View>
 
                         </View>
 
-                    </View>
-
-                </Image>
-            </Container>
+                    </Image>
+                </Container>
+            </TouchableWithoutFeedback>
 
         );
     }
@@ -108,16 +123,17 @@ const styles = {
     },
     image: {
         height: 150,
-        alignItems:'center',
-        paddingTop:40,
+        alignItems: 'center',
+        paddingTop: 40,
     },
     message: {
-        paddingTop:40,
+        paddingTop: 60,
+        paddingBottom: 20,
         alignItems: 'center',
     },
     messageText: {
         width: 280,
-        paddingBottom: 20,
+
         color: '#fff',
         textAlign: 'center'
     },
@@ -125,7 +141,7 @@ const styles = {
         flexDirection: 'row',
         justifyContent: 'center',
         borderColor: '#d6d6d6',
-        paddingBottom: 5,
+        paddingBottom: 10,
         borderBottomWidth: 1,
 
     },
