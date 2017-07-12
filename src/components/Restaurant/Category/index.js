@@ -174,7 +174,7 @@ export default class Category extends React.Component {
         if (item.id === this.state.active && this.state.selected[item.id] > 0) {
             return (
                 <View style={styles.changeCountItemButton}>
-                    <Button bordered warning rounded style={styles.minusItemButton} onPress={() => {
+                    <Button dark bordered warning rounded style={styles.minusItemButton} onPress={() => {
                         this.minusItem(item)
                     }}>
                         <Icon name="remove" size={24}/>
@@ -184,33 +184,44 @@ export default class Category extends React.Component {
                         <Text style={styles.counterItemButtonText}> {this.state.selected[item.id]}</Text>
                     </View>
 
-                    <Button bordered warning rounded style={styles.plusItemButton} onPress={() => {
-                        this.addItem(item)
-                    }}>
-                        <ChesterIcon name="plus-24" color={platform.brandWarning} size={16}/>
-                    </Button>
+                    <View style={styles.plusItemButton}>
+                        <Button  androidRippleColor="rgba(0, 0, 0, 0.15)" bordered warning rounded style={styles.plusItemButton} onPress={() => {
+                            this.addItem(item)
+                        }}>
+                            <ChesterIcon name="plus-24" color={platform.brandWarning} size={16}/>
+                        </Button>
+                    </View>
+
 
 
                 </View>
             )
         }
         else if (this.state.selected[item.id] > 0) {
-            return (  <Button bordered warning rounded style={styles.addItemButton} onPress={() => {
-                this.addItem(item)
-            }}>
+            return (
 
+            <View>
+
+                <Button bordered warning rounded style={styles.addItemButton} onPress={() => {
+                    this.addItem(item)
+                }}>
+
+
+
+                    <Text style={styles.addItemButtonText}>{item.price + " ₽"}</Text>
+                </Button>
                 <View style={styles.countItemBadgeBlock}>
                     <Text style={styles.countItemBadge}> {this.state.selected[item.id]}</Text>
                 </View>
+            </View>
 
-                <Text style={styles.addItemButtonText}>{item.price + "р"}</Text>
-            </Button>        )
+                   )
         }
         else {
             return (  <Button bordered warning rounded style={styles.addItemButton} onPress={() => {
                 this.addItem(item)
             }}>
-                <Text style={styles.addItemButtonText}>{item.price + "р"}</Text>
+                <Text style={styles.addItemButtonText}>{item.price + " ₽"}</Text>
             </Button>        )
 
         }
@@ -300,8 +311,8 @@ const styles = {
     minusItemButton: {
         height: 34,
         width: 37,
-        borderBottomLeftRadius: 50,
-        borderTopLeftRadius: 50,
+        borderBottomLeftRadius: 34,
+        borderTopLeftRadius: 34,
         borderBottomRightRadius: 0,
         borderTopRightRadius: 0,
         paddingLeft: 0,
@@ -312,14 +323,15 @@ const styles = {
     plusItemButton: {
         height: 34,
         width: 37,
-        borderBottomRightRadius: 50,
-        borderTopRightRadius: 50,
+        borderBottomRightRadius: 34,
+        borderTopRightRadius: 34,
         borderBottomLeftRadius: 0,
         borderTopLeftRadius: 0,
         paddingLeft: 0,
         paddingRight: 0,
         flexDirection: 'row',
-        justifyContent: "center"
+        justifyContent: "center",
+        overflow:'hidden'
     },
     counterItemButton: {
         height: 34,

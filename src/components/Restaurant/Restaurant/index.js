@@ -1,6 +1,6 @@
 import React from 'react';
 import {Body, Button, Card, CardItem, Container, Content, Icon, Left, Right, Text, View} from 'native-base';
-import {Image, TouchableOpacity} from "react-native";
+import {Image, TouchableOpacity, Dimensions} from "react-native";
 import platform from "../../../../native-base-theme/variables/platform";
 import ChesterIcon from "../../Common/ChesterIcon/index";
 import {signStackStyle} from "../../../routers/SignStack";
@@ -40,7 +40,8 @@ export default class Restaurant extends React.Component {
 const styles = {
     container: {
         flex: 1,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        maxWidth:Dimensions.get('window').width
     },
     image: {
         height: 160,

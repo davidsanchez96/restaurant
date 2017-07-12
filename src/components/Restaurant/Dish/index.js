@@ -44,17 +44,16 @@ export default class Dish extends React.Component {
                         </LinearGradient>
 
                         <View
-                            style={{
-                                position: 'absolute',
-                                bottom: 0,
-                                left: 0,
-                                right: 0
-                            }}
+                            style={styles.subInfo}
                         >
 
-                            <Text>
-                                
+                            <Text style={styles.subInfoWeight}>
+                                280г
                             </Text>
+                            <View  style={styles.subInfoLikeBlock}>
+                                <Text style={styles.subInfoLike}>12</Text>
+                                <ChesterIcon name="like-24" size={20} color="#fff"/>
+                            </View>
                         </View>
 
                     </View>
@@ -66,11 +65,11 @@ export default class Dish extends React.Component {
                             <Text style={styles.text}>Ha</Text>
                         </View>
                         <View style={styles.buttonBlock}>
-                            <Button success rounded style={{flex:1,marginRight:15}}>
-                                <Text style={{flex:1,textAlign:'center'}}>За баллы</Text>
+                            <Button success rounded style={{flex: 1, marginRight: 15}}>
+                                <Text style={{flex: 1, textAlign: 'center'}}>За баллы</Text>
                             </Button>
-                            <Button warning rounded style={{flex:1}}>
-                                <Text style={{flex:1,textAlign:'center'}}>250 ₽</Text>
+                            <Button warning rounded style={{flex: 1}}>
+                                <Text style={{flex: 1, textAlign: 'center'}}>250 ₽</Text>
                             </Button>
                         </View>
                     </View>
@@ -91,6 +90,32 @@ const styles = {
         height: 260,
         width: null
     },
+    subInfo:{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        paddingHorizontal:15,
+        paddingBottom:5
+    },
+    subInfoWeight:{
+        fontFamily: platform.fontFamily,
+        fontSize: 20,
+        lineHeight: 29
+    },
+    subInfoLikeBlock:{
+        alignItems:'center',
+        flexDirection:'row',
+    },
+    subInfoLike:{
+        paddingRight:5,
+        fontFamily: platform.fontFamily,
+        fontSize: 20,
+        lineHeight: 29
+    },
     contentBlock: {
         paddingHorizontal: 15,
         flex: 1,
@@ -99,7 +124,7 @@ const styles = {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 'auto',
-        paddingBottom:30
+        paddingBottom: 30
     },
     header: {
         color: platform.brandWarningAccent,

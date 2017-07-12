@@ -169,7 +169,7 @@ export default class Menu extends React.Component {
 
         return (
 
-            <View style={styles.container}>
+            <View style={styles.container} >
                 <Container>
                     <Content>
 
@@ -203,7 +203,9 @@ export default class Menu extends React.Component {
 const styles = {
     container: {
         flex: 1,
-        backgroundColor: '#2B3034'
+        backgroundColor: '#2B3034',
+        paddingTop:7,
+        zIndex:1
     },
     listItem: {
         height: 52,

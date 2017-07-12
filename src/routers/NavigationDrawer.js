@@ -44,7 +44,7 @@ export default NavigationDrawer = DrawerNavigator({
     },
     {
         cardStyle: {
-            backgroundColor: 'transparent',
+            backgroundColor: '#2B3034',
         },
         contentComponent: (props) => <CustomNavigationDrawerSwag {...props}/>
     });

@@ -5,7 +5,7 @@ import {Platform} from "react-native";
 export const BaseNavigationBarStyle = {
     headerStyle: {
 
-        backgroundColor: "rgba(43,48,52,0.85)",
+        backgroundColor: "rgb(44, 47, 51)",
         height: Platform.OS === "ios" ? 64 : (56 + Constants.statusBarHeight),
         paddingTop: Platform.OS === "ios" ? 20 : Constants.statusBarHeight,
 

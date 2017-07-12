@@ -4,17 +4,48 @@ import {Image, TouchableOpacity} from "react-native";
 import platform from "../../../../native-base-theme/variables/platform";
 import ChesterIcon from "../../Common/ChesterIcon/index";
 import RestaurantLocation from "../common/RestaurantLocation/index";
+import {connect} from "react-redux";
+import {signStackStyle} from "../../../routers/SignStack";
 
-export default class Restaurants extends React.Component {
+class Restaurants extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <Container >
-                    <Content style={styles.content}>
-                        <TouchableOpacity onPress={() => {
-                            this.props.navigation.navigate('Restaurant')
-                        }}>
+            <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
+
+                <View style={styles.container}>
+                    <Container >
+                        <Content style={styles.content}>
+
+
+                            <TouchableOpacity onPress={() => {
+                                this.props.navigation.navigate('Restaurant')
+                            }}>
+
+
+                                <Card style={{...styles.card, ...styles.cardTransparent}}>
+                                    <CardItem cardBody style={styles.cardTransparent}>
+                                        <Image source={require('../../../../assets/images/cafe-1.png')}
+                                               style={styles.image}/>
+                                    </CardItem>
+                                    <CardItem style={styles.info}>
+
+                                        <Text style={styles.infoHeader}>Рестобар</Text>
+
+
+                                        <RestaurantLocation/>
+
+                                        <View style={styles.infoLine}>
+                                            <ChesterIcon name="time-16" size={16} color={platform.brandWarning}/>
+                                            <Text style={styles.time}>Открыто</Text>
+                                        </View>
+
+                                    </CardItem>
+
+
+                                </Card>
+                            </TouchableOpacity>
+
                             <Card style={{...styles.card, ...styles.cardTransparent}}>
                                 <CardItem cardBody style={styles.cardTransparent}>
                                     <Image source={require('../../../../assets/images/cafe-1.png')}
@@ -24,9 +55,11 @@ export default class Restaurants extends React.Component {
 
                                     <Text style={styles.infoHeader}>Рестобар</Text>
 
-
-                                    <RestaurantLocation/>
-
+                                    <View style={styles.infoLine}>
+                                        <ChesterIcon name="location-16" size={16} color={platform.brandWarning}/>
+                                        <Text style={styles.infoAddress}>ТРЦ Аэропарк</Text>
+                                        <Text style={styles.infoDistance}>1.8км</Text>
+                                    </View>
                                     <View style={styles.infoLine}>
                                         <ChesterIcon name="time-16" size={16} color={platform.brandWarning}/>
                                         <Text style={styles.time}>Открыто</Text>
@@ -36,52 +69,34 @@ export default class Restaurants extends React.Component {
 
 
                             </Card>
-                        </TouchableOpacity>
 
-                        <Card style={{...styles.card, ...styles.cardTransparent}}>
-                            <CardItem cardBody style={styles.cardTransparent}>
-                                <Image source={require('../../../../assets/images/cafe-1.png')} style={styles.image}/>
-                            </CardItem>
-                            <CardItem style={styles.info}>
-
-                                <Text style={styles.infoHeader}>Рестобар</Text>
-
-                                <View style={styles.infoLine}>
-                                    <ChesterIcon name="location-16" size={16} color={platform.brandWarning}/>
-                                    <Text style={styles.infoAddress}>ТРЦ Аэропарк</Text>
-                                    <Text style={styles.infoDistance}>1.8км</Text>
-                                </View>
-                                <View style={styles.infoLine}>
-                                    <ChesterIcon name="time-16" size={16} color={platform.brandWarning}/>
-                                    <Text style={styles.time}>Открыто</Text>
-                                </View>
-
-                            </CardItem>
-
-
-                        </Card>
-
-                    </Content>
-                </Container>
-            </View>
-
+                        </Content>
+                    </Container>
+                </View>
+            </Image>
         );
     }
 }
-
+function bindAction(dispatch) {
+    return {};
+}
+const mapStateToProps = state => ({
+    restaurants: state.restaurant.restaurants,
+    isPending: state.restaurant.getDataPending
+});
+const RestaurantsSwag = connect(mapStateToProps, bindAction)(Restaurants);
+export default RestaurantsSwag;
 
 const styles = {
     container: {
         flex: 1,
         backgroundColor: 'transparent'
     },
-    content: {
-
-    },
+    content: {},
     card: {
         marginVertical: 20,
         marginBottom: 15,
-        marginTop:15,
+        marginTop: 15,
         marginLeft: 0,
         marginRight: 0
 

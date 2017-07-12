@@ -3,9 +3,18 @@ import {Image, StyleSheet, Text, View, StatusBar} from 'react-native';
 import SignStack, {signStackStyle} from "./routers/SignStack";
 import {connect} from "react-redux";
 import NavigationDrawer from "./routers/NavigationDrawer";
+import {getRestaurants} from "./actions/restaurant";
 
 
 class App extends React.Component {
+
+
+    constructor(props) {
+        super(props);
+        this.props.getRestaurants();
+    }
+
+
     render() {
         StatusBar.setBarStyle('light-content', true);
         if (this.props.showSign) {
@@ -18,7 +27,7 @@ class App extends React.Component {
         }
         return (
             <Image source={require('../assets/images/background/background.png')} style={signStackStyle}>
-                <NavigationDrawer style={{backgroundColor:'#000'}}/>
+                <NavigationDrawer style={{backgroundColor: '#000'}}/>
             </Image>
         );
     }
@@ -26,7 +35,11 @@ class App extends React.Component {
 
 
 function bindAction(dispatch) {
-    return {};
+    return {
+        getRestaurants: () => {
+            dispatch(getRestaurants());
+        }
+    };
 }
 const mapStateToProps = state => ({
     logged: state.user.logged,
