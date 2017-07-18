@@ -6,6 +6,8 @@ import {BaseNavigationBarStyle} from "./BaseNavigationBarStyle";
 import RestaurantTabs from "./RestaurantTabs";
 import Category from "../components/Restaurant/Category/index";
 import Dish from "../components/Restaurant/Dish/index";
+import BookTableConfirm from "../components/Restaurant/BookTableConfirm/index";
+import BasketIcon from "./components/BasketIcon/index";
 export default RestaurantsStack = StackNavigator({
     Restaurants: {
         screen: Restaurants,
@@ -62,9 +64,23 @@ export default RestaurantsStack = StackNavigator({
             }
         }
     },
+    BookTableConfirm: {
+        screen: BookTableConfirm,
+        navigationOptions: {
+            title: 'Подтверждение',
+            headerBackTitleStyle: {
+                color: "transparent"
+            },
+
+
+            headerStyle: BaseNavigationBarStyle.headerStyle,
+
+        }
+    },
 }, {
     navigationOptions: props => ({
-        ...BaseNavigationBarStyle
+        ...BaseNavigationBarStyle,
+        headerRight: <BasketIcon {...props} />
     }),
     cardStyle: {
         backgroundColor: 'transparent',

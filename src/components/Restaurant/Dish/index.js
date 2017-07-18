@@ -16,6 +16,29 @@ export default class Dish extends React.Component {
         title: navigation.state.params.name
     });
 
+
+    addItem(item) {
+
+
+        this.setState({count: this.state.count + 1});
+
+
+    }
+
+    minusItem(item) {
+        this.setState({count: this.state.count - 1});
+
+    }
+
+    state = {
+        count: 0,
+        like: false
+    };
+
+    like()
+    {
+        this.setState({like:!this.state.like});
+    }
     render() {
 
         return (
@@ -50,27 +73,101 @@ export default class Dish extends React.Component {
                             <Text style={styles.subInfoWeight}>
                                 280г
                             </Text>
-                            <View  style={styles.subInfoLikeBlock}>
+                            <View style={styles.subInfoLikeBlock}>
                                 <Text style={styles.subInfoLike}>12</Text>
-                                <ChesterIcon name="like-24" size={20} color="#fff"/>
+                                <TouchableOpacity onPress={
+                                    () => {
+                                        this.like()
+                                    }
+                                }>
+
+                                    {
+
+                                        this.state.like
+                                            ?
+                                            <ChesterIcon name="like-red-24" size={20} color={platform.brandDanger}
+                                            />
+                                            :
+                                             <ChesterIcon name="like-24" size={20} color="#fff" />
+
+                                    }
+
+                                </TouchableOpacity>
+
                             </View>
                         </View>
 
                     </View>
 
 
+                    <View style={styles.hang}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', paddingRight: 12}}>
+                            <ChesterIcon name="star-16" size={16} color={platform.brandWarning}/>
+                            <Text style={styles.hangText}>Новое блюдо</Text>
+                        </View>
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            <ChesterIcon name="chili-16" size={16} color={platform.brandWarning}/>
+                            <Text style={styles.hangText}>Острое блюдо</Text>
+
+                        </View>
+                    </View>
+
+
                     <View style={styles.contentBlock}>
                         <View>
                             <Text style={styles.header}>Капрезе</Text>
-                            <Text style={styles.text}>Ha</Text>
+                            <Text style={styles.text}>Классический итальянский салат, в котором чередуются бакинские
+                                помидоры и сыр Моцарелла
+                                под соусом Песто. Подается с рукколой и прошутто. </Text>
                         </View>
                         <View style={styles.buttonBlock}>
-                            <Button success rounded style={{flex: 1, marginRight: 15}}>
-                                <Text style={{flex: 1, textAlign: 'center'}}>За баллы</Text>
+                            <Button success rounded style={{flex: 1, marginRight: 13, justifyContent: 'center'}}>
+                                <Text >За баллы</Text>
                             </Button>
-                            <Button warning rounded style={{flex: 1}}>
-                                <Text style={{flex: 1, textAlign: 'center'}}>250 ₽</Text>
-                            </Button>
+
+
+                            {
+                                this.state.count === 0
+                                    ?
+
+                                    <Button warning rounded style={{flex: 1, justifyContent: 'center'}} onPress={() => {
+                                        this.addItem()
+                                    }}>
+                                        <Text >250 ₽</Text>
+                                    </Button>
+
+                                    :
+                                    <View style={styles.changeCountItemButton}>
+                                        <Button dark bordered warning rounded style={styles.minusItemButton}
+                                                onPress={() => {
+                                                    this.minusItem()
+                                                }}>
+                                            <Icon name="remove" size={24}/>
+                                        </Button>
+
+                                        <View style={styles.counterItemButton}>
+                                            <Text
+                                                style={styles.counterItemButtonText}> {this.state.count}</Text>
+                                        </View>
+
+                                        <View style={styles.plusItemButton}>
+                                            <Button androidRippleColor="rgba(0, 0, 0, 0.15)" bordered warning rounded
+                                                    style={styles.plusItemButton} onPress={() => {
+                                                this.addItem()
+                                            }}>
+                                                <ChesterIcon name="plus-24" color={platform.brandWarning} size={16}/>
+                                            </Button>
+                                        </View>
+
+
+                                    </View>
+
+
+
+
+                            }
+
+
                         </View>
                     </View>
 
@@ -90,34 +187,50 @@ const styles = {
         height: 260,
         width: null
     },
-    subInfo:{
+    subInfo: {
         position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center',
-        paddingHorizontal:15,
-        paddingBottom:5
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingBottom: 11
     },
-    subInfoWeight:{
+    subInfoWeight: {
         fontFamily: platform.fontFamily,
         fontSize: 20,
         lineHeight: 29
     },
-    subInfoLikeBlock:{
-        alignItems:'center',
-        flexDirection:'row',
+    subInfoLikeBlock: {
+        alignItems: 'center',
+        flexDirection: 'row',
     },
-    subInfoLike:{
-        paddingRight:5,
+    subInfoLike: {
+        paddingRight: 5,
         fontFamily: platform.fontFamily,
         fontSize: 20,
         lineHeight: 29
+    },
+    hang: {
+
+        borderBottomWidth: 1,
+        borderColor: platform.brandDivider,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    hangText: {
+        color: platform.brandFontAccent,
+        fontFamily: platform.fontFamily,
+        fontSize: 14,
+        lineHeight: 20,
+        paddingLeft: 3
     },
     contentBlock: {
-        paddingHorizontal: 15,
+        paddingHorizontal: 16,
         flex: 1,
     },
     buttonBlock: {
@@ -137,6 +250,47 @@ const styles = {
         fontFamily: platform.fontFamily,
         fontSize: 14,
         lineHeight: 20
+    },
+    changeCountItemButton: {
+        flexDirection: 'row',
+        flex: 1
+    },
+    minusItemButton: {
+        borderBottomLeftRadius: 34,
+        borderTopLeftRadius: 34,
+        borderBottomRightRadius: 0,
+        borderTopRightRadius: 0,
+        paddingLeft: 0,
+        paddingRight: 0,
+        flexDirection: 'row',
+        justifyContent: "center",
+        flex: 1,
+        marginLeft: -3
+    },
+    plusItemButton: {
+        borderBottomRightRadius: 34,
+        borderTopRightRadius: 34,
+        borderBottomLeftRadius: 0,
+        borderTopLeftRadius: 0,
+        paddingLeft: 0,
+        paddingRight: 0,
+        flexDirection: 'row',
+        justifyContent: "center",
+        overflow: 'hidden',
+        flex: 1
+    },
+    counterItemButton: {
+        borderWidth: 0,
+        backgroundColor: platform.brandWarning,
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1
+    },
+    counterItemButtonText: {
+        fontFamily: platform.fontFamily,
+        fontSize: 18,
+        lineHeight: 26,
+        textAlign: "center",
     },
 
 };

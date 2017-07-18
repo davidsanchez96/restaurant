@@ -11,60 +11,17 @@ import Collapsible from 'react-native-collapsible';
 import SearchInput from "../common/SearchInput/index";
 const SECTIONS = [
     {
-        title: 'Мясо',
-        items: [
-            {
-                title: 'Апперитивы и биттеры'
-            },
-            {
-                title: 'Игристые вина'
-            },
-            {
-                title: 'Вина белые'
-            }
-        ]
+        title: 'Мясо'
     },
     {
-        title: 'Салаты',
-        items: [
-            {
-                title: 'Апперитивы и биттеры'
-            },
-            {
-                title: 'Игристые вина'
-            },
-            {
-                title: 'Вина белые'
-            }
-        ]
+        title: 'Салаты'
     },
     {
-        title: 'Гарниры',
-        items: [
-            {
-                title: 'Апперитивы и биттеры'
-            },
-            {
-                title: 'Игристые вина'
-            },
-            {
-                title: 'Вина белые'
-            }
-        ]
+        title: 'Гарниры'
+
     },
     {
-        title: 'Десерты',
-        items: [
-            {
-                title: 'Апперитивы и биттеры'
-            },
-            {
-                title: 'Игристые вина'
-            },
-            {
-                title: 'Вина белые'
-            }
-        ]
+        title: 'Десерты'
     },
     {
         title: 'Бар',
@@ -104,7 +61,7 @@ export default class Menu extends React.Component {
     }
 
 
-    _renderHeader(section) {
+    _renderHeader(section,category) {
         return (
             <View>
                 <TouchableOpacity
@@ -112,7 +69,17 @@ export default class Menu extends React.Component {
 
                     style={styles.listItem}
                     onPress={() => {
-                        this.changeState(section.title)
+
+
+                        if(category)
+                        {
+                            this.changeState(section.title)
+                        }
+                        else
+                        {
+                            this.props.navigation.navigate('Category', {name: section.title})
+                        }
+
 
                     }}>
 
@@ -169,7 +136,7 @@ export default class Menu extends React.Component {
 
         return (
 
-            <View style={styles.container} >
+            <View style={styles.container}>
                 <Container>
                     <Content>
 
@@ -178,14 +145,24 @@ export default class Menu extends React.Component {
 
                         }}/>
                         {SECTIONS.map((item, i) => {
-                            return (
-                                <View key={i}>
-                                    {this._renderHeader(item)}
-                                    <Collapsible collapsed={this.state.activeSection !== item.title}>
-                                        {this.state.activeSection === item.title ? this._renderContent(item) : <View/>}
-                                    </Collapsible>
 
-                                </View>)
+                            if (item.items) {
+                                return (
+                                    <View key={i}>
+                                        {this._renderHeader(item,true)}
+                                        <Collapsible collapsed={this.state.activeSection !== item.title}>
+                                            {this.state.activeSection === item.title ? this._renderContent(item) :
+                                                <View/>}
+                                        </Collapsible>
+
+                                    </View>)
+                            }
+                            else {
+                                return (
+                                    <View key={i}>
+                                        {this._renderHeader(item)}
+                                    </View>)
+                            }
 
 
                         })}
@@ -204,8 +181,8 @@ const styles = {
     container: {
         flex: 1,
         backgroundColor: '#2B3034',
-        paddingTop:7,
-        zIndex:1
+        paddingTop: 7,
+        zIndex: 1
     },
     listItem: {
         height: 52,
@@ -214,7 +191,7 @@ const styles = {
         borderColor: platform.brandDivider,
         borderBottomWidth: 1,
         alignItems: 'center',
-        paddingHorizontal: 15
+        paddingHorizontal: 16
 
     },
     listItemText: {
@@ -235,7 +212,7 @@ const styles = {
         borderColor: platform.brandDivider,
         borderBottomWidth: 1,
         alignItems: 'center',
-        paddingHorizontal: 15
+        paddingHorizontal: 16
 
     },
     subListItemBody: {

@@ -2,12 +2,14 @@ import React from 'react';
 import {Button, Container, Form, Input, Item, Text, View} from 'native-base';
 import {connect} from "react-redux";
 import {dispatch} from "redux";
-import {confirmCode, setSignState, signIn} from "../../../actions/user";
+import {confirmCode, sendCode, setSignState, signIn} from "../../../actions/user";
 import moment from "moment";
 import Spinner from "react-native-loading-spinner-overlay";
-import {Image} from "react-native";
+import {Image, TouchableOpacity, TouchableWithoutFeedback,Keyboard} from "react-native";
 import {signStackStyle} from "../../../routers/SignStack";
 import H3 from "../../../../native-base-theme/components/H3";
+import platform from "../../../../native-base-theme/variables/platform";
+
 
 class SignSecondStep extends React.Component {
 
@@ -22,7 +24,7 @@ class SignSecondStep extends React.Component {
     }
 
     tick() {
-        if (this.state.sec === 0) {
+        if (this.state.sec <= 0) {
             clearInterval(this.timerID);
             return;
         }
@@ -55,9 +57,29 @@ class SignSecondStep extends React.Component {
         clearInterval(this.timerID);
     }
 
-    changeCode(text) {
+    async sendCode() {
+        let result = await this.props.sendCode(this.props.navigation.state.params.number);
+        this.setState((prevState, props) => ({
+            sec: 30
+        }));
+        this.timerID = setInterval(
+            () => this.tick(),
+            1000
+        );
+    }
+
+    async changeCode(text) {
         if (text.length > 5) {
-            this.props.confirmCode(text);
+            //try {
+            let res = await this.props.confirmCode(text);
+            this.props.signInAfter();
+            //}
+            /*catch (ex) {
+             this.setState((prevState, props) => ({
+             sec: 0
+             }));
+             }*/
+
         }
     }
 
@@ -65,65 +87,67 @@ class SignSecondStep extends React.Component {
 
 
         return (
-            <Container style={styles.container}>
-                <Image source={require('../../../../assets/images/login&registration/login-bg.png')}
-                       style={signStackStyle}>
-                    <View style={styles.container}>
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                <Container style={styles.container}>
+                    <Image source={require('../../../../assets/images/login&registration/login-bg.png')}
+                           style={signStackStyle}>
+                        <View style={styles.container}>
 
 
-                        <Spinner visible={this.props.pending} textStyle={{color: '#FFF'}}/>
+                            <Spinner visible={this.props.pending} textStyle={{color: '#FFF'}}/>
 
-                        <View style={styles.image}>
-                        </View>
+                            <View style={styles.image}>
+                            </View>
 
-                        <View style={styles.message}>
-                            <Text style={{...styles.messageText, ...H3()}}>Код подтверждения был отправлен на номер
-                                {' +'+this.props.navigation.state.params.number}!</Text>
-                        </View>
+                            <View style={styles.message}>
+                                <Text style={{...styles.messageText}}>Код подтверждения был отправлен на номер
+                                    {' +' + this.props.navigation.state.params.number}!</Text>
+                            </View>
 
 
-                        <View style={styles.phoneBlock}>
+                            <View style={styles.phoneBlock}>
 
-                            <View>
-                                <Item underline style={styles.codeItem}>
-                                    <Input placeholder='Код' style={styles.codeInput}
-                                           onChangeText={(text) => this.changeCode(text)}
-                                           keyboardType="phone-pad"
-                                    />
-                                </Item>
+                                <View>
+                                    <Item underline style={styles.codeItem}>
+                                        <Input placeholder='код' style={styles.codeInput}
+                                               onChangeText={(text) => this.changeCode(text)}
+                                               keyboardType="phone-pad"
+                                        />
+                                    </Item>
+
+                                </View>
+                            </View>
+                            <View style={styles.resendCode}>
+                                {
+                                    this.state.sec === 0
+                                        ?
+                                        <TouchableOpacity transparent warning onPress={() => {
+                                            this.sendCode()
+                                        }}>
+                                            <Text style={styles.resendCodeButton}>Отправить код повторно ></Text>
+                                        </TouchableOpacity>
+                                        : <Text>Отправить код повторно 0:{this.state.sec}</Text>
+                                }
+
 
                             </View>
-                        </View>
-                        <View style={styles.resendCode}>
-                            {
-                                this.state.sec === 0
-                                    ?
-                                    <View><Button transparent warning onPress={() => {
+
+                            <View style={styles.button}>
+
+                                <View>
+                                    <Button transparent warning onPress={() => {
                                         this.props.signInAfter()
                                     }}>
-                                        <Text  style={styles.resendCodeButton}>Отправить код повторно></Text>
-                                    </Button></View>
-                                    : <Text>Отправить код повторно 0:{this.state.sec}</Text>
-                            }
+                                        <Text>Вступить в клуб позже ></Text>
+                                    </Button>
+                                </View>
 
-
-                        </View>
-
-                        <View style={styles.button}>
-
-                            <View>
-                                <Button transparent warning onPress={() => {
-                                    this.props.signInAfter()
-                                }}>
-                                    <Text>Вступить в клуб позже></Text>
-                                </Button>
                             </View>
 
                         </View>
-
-                    </View>
-                </Image>
-            </Container>
+                    </Image>
+                </Container>
+            </TouchableWithoutFeedback>
         );
     }
 }
@@ -133,7 +157,8 @@ function bindAction(dispatch) {
     return {
         signInAfter: () => dispatch(setSignState(false)),
         signIn: () => dispatch(signIn()),
-        confirmCode: (text) => dispatch(confirmCode(text))
+        confirmCode: (text) => dispatch(confirmCode(text)),
+        sendCode: (number) => dispatch(sendCode(number))
     };
 }
 
@@ -159,7 +184,9 @@ const styles = {
     },
     messageText: {
         width: 250,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontSize: 20,
+        lineHeight: 29
     },
     phoneBlock: {
         borderColor: '#d6d6d6',
@@ -168,7 +195,8 @@ const styles = {
     code: {},
     codeInput: {
         textAlign: 'center',
-        paddingLeft: 0
+        paddingLeft: 0,
+        fontFamily: platform.fontFamily
     },
     codeItem: {
         borderColor: 'transparent',
@@ -178,7 +206,8 @@ const styles = {
         paddingTop: 20,
     },
     resendCodeButton: {
-        fontSize: 16
+        fontSize: 16,
+        color: platform.brandWarning
     },
     button: {
         paddingTop: 20,

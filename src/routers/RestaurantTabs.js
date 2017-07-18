@@ -4,6 +4,7 @@ import platform from "../../native-base-theme/variables/platform";
 import Menu from "../components/Restaurant/Menu/index";
 import News from "../components/News/News/index";
 import Team from "../components/Restaurant/Team/index";
+import BookTable from "../components/Restaurant/BookTable/index";
 
 
 
@@ -52,8 +53,8 @@ const RestaurantTabs = TabNavigator({
         }
 
     },
-    Notifications2: {
-        screen: Restaurant,
+    BookTable: {
+        screen: BookTable,
         navigationOptions: {
             title: 'Заказ стола'
         }

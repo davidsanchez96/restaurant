@@ -10,7 +10,7 @@ import {autoRehydrate} from "redux-persist";
 export default function configureStore(onCompletion: () => void): any {
     const enhancer = compose(
         applyMiddleware(thunk, promiseMiddleware()),
-       // autoRehydrate(),
+       autoRehydrate(),
         /*devTools({
             name: 'nativestarterkit', realtime: true,
         })*/

@@ -7,12 +7,12 @@ class AuthServiceImpl {
 
     async confirmCode(code) {
 
-        let res = await api.get('/token/client/verification', {
+        let res = await this.Api.post('/token/client/verification', {
             body: {
                 code: code
             }
         });
-
+        if (res.err) throw res.err;
         return res;
     }
 
@@ -21,7 +21,7 @@ class AuthServiceImpl {
         let res = await this.Api.get(`/token/client/%2B${phone}`);
         if (res.err) throw res.err;
 
-        //Api.jwt(res.body.token);
+        Api.jwt(res.body.token);
         return res.body;
     }
 

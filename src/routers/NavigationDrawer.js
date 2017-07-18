@@ -46,7 +46,7 @@ export default NavigationDrawer = DrawerNavigator({
         cardStyle: {
             backgroundColor: '#2B3034',
         },
-        contentComponent: (props) => <CustomNavigationDrawerSwag {...props}/>
+        contentComponent: (props) => <CustomNavigationDrawerSwag disableGestures={true} {...props}/>
     });
 
 
@@ -72,6 +72,7 @@ class CustomNavigationDrawer extends React.Component {
 
         return (
             <Image source={require('../../assets/images/navigation/nav-bg.png')} style={styles.background}>
+
                 <View style={styles.container}>
                     <View style={styles.userInfo}>
                         <UserInfo {...this.props} />

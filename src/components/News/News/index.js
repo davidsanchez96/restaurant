@@ -16,7 +16,7 @@ export default class News extends React.Component {
 
         let news = [
             {name: 'Открытие'}
-        ]
+        ];
         return (
 
 
@@ -64,7 +64,7 @@ const styles = {
         fontFamily: platform.fontFamily,
         fontSize: 28,
         lineHeight: 40,
-        marginBottom: 12,
+        marginBottom: 14,
         marginTop: 15,
         paddingHorizontal: 16
     },

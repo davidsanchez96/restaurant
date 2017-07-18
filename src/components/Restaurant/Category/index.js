@@ -264,7 +264,7 @@ const styles = {
         borderColor: platform.brandDivider,
         borderBottomWidth: 1,
         alignItems: 'center',
-        paddingHorizontal: 15,
+        paddingHorizontal: 16,
         height: 100
     },
     info: {
@@ -276,7 +276,7 @@ const styles = {
         alignItems: 'center'
     },
     infoBlockText: {
-        marginLeft: 15
+        marginLeft: 16
     },
     infoText: {
         fontFamily: platform.fontFamily,

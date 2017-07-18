@@ -34,7 +34,6 @@ const styles = {
     },
     searchInput: {
         flexDirection: 'row',
-        justifyContent: 'center',
         borderBottomWidth: 0,
         backgroundColor: '#4A545B',
         height: 32,

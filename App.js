@@ -34,14 +34,14 @@ export default class App extends React.Component {
                 images: [
                     require('./assets/images/login&registration/login-bg.png'),
                     require('./assets/images/login&registration/login-logo.png'),
+                    require('./assets/images/login&registration/russia-flag.png'),
                     require('./assets/images/navigation/nav-bg.png'),
                     require('./assets/images/background/background.png'),
-                    require('./assets/images/cafe-1.png')
-
+                    require('./assets/images/cafe-1.png'),
                 ],
                 fonts: [
                     {  'Lumberjack': require('./assets/fonts/lumberjack.otf') },
-                    {  'Mozzart-sketch': require('./assets/fonts/MozzartSketch/MozzartSketch-Bold.otf') },
+                    {  'Mozzart-sketch': require('./assets/fonts/MozzartSketch/MozzartSketch-ExtraBold.otf') },
 
                 ],
             });

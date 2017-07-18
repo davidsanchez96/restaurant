@@ -7,24 +7,22 @@ import {Image, TouchableOpacity} from "react-native";
 import platform from "../../../../native-base-theme/variables/platform";
 import ChesterIcon from "../../Common/ChesterIcon/index";
 import {signStackStyle} from "../../../routers/SignStack";
+import {connect} from "react-redux";
 
 
-export default class Team extends React.Component {
+class Team extends React.Component {
 
 
-
-    renderMember()
-    {
+    renderMember(item) {
         return (
-            <View style={styles.member}>
-                <Image source={require('../../../../assets/images/cafe-1.png')} style={styles.memberImage}>
+            <View style={styles.member} key={item.id}>
+                <Image source={{uri:item.avatar_url}} style={styles.memberImage}>
                 </Image>
 
                 <View style={styles.memberInfo}>
-                    <Text style={styles.memberName}>Семен Колесников</Text>
-                    <Text style={styles.memberType}>Шеф-повар</Text>
+                    <Text style={styles.memberName}>{item.name}</Text>
+                    <Text style={styles.memberType}>{item.position}</Text>
                 </View>
-
 
 
             </View>
@@ -43,7 +41,7 @@ export default class Team extends React.Component {
                 <View style={styles.container}>
                     <Container >
                         <Content>
-                            <View style={{ paddingHorizontal: 16}}>
+                            <View style={{paddingHorizontal: 16}}>
                                 <Text style={styles.header}>
 
                                     Команда
@@ -57,11 +55,11 @@ export default class Team extends React.Component {
                             </View>
 
 
-
-                            {this.renderMember()}
-                            {this.renderMember()}
-                            {this.renderMember()}
-                            {this.renderMember()}
+                            {
+                                this.props.restaurants[[this.props.navigation.state.params.key]].employees.map((item) => {
+                                    return this.renderMember(item);
+                                })
+                            }
 
 
                         </Content>
@@ -72,6 +70,14 @@ export default class Team extends React.Component {
         );
     }
 }
+function bindAction(dispatch) {
+    return {};
+}
+const mapStateToProps = state => ({
+    restaurants: state.restaurant.restaurants
+});
+const TeamSwag = connect(mapStateToProps, bindAction)(Team);
+export default TeamSwag;
 
 
 const styles = {
@@ -84,7 +90,7 @@ const styles = {
         fontFamily: platform.fontFamily,
         fontSize: 28,
         lineHeight: 40,
-        marginBottom: 12,
+        marginBottom: 7,
         marginTop: 15,
     },
     text: {
@@ -92,34 +98,34 @@ const styles = {
         fontFamily: platform.fontFamily,
         fontSize: 14,
         lineHeight: 20,
-        marginBottom:30
+        marginBottom: 30
     },
-    member:{
-        flexDirection:'row',
+    member: {
+        flexDirection: 'row',
         paddingLeft: 16,
-        alignItems:'center',
-        marginBottom:12
+        alignItems: 'center',
+        marginBottom: 12
 
     },
-    memberImage:{
-        width:52,
-        height:52,
-        borderRadius:26,
-        marginRight:16,
-        marginBottom:15
+    memberImage: {
+        width: 52,
+        height: 52,
+        borderRadius: 26,
+        marginRight: 16,
+        marginBottom: 15
     },
-    memberInfo:{
-        paddingBottom:15,
-        borderColor:'#656D73',
-        borderBottomWidth:1,
-        flex:1
+    memberInfo: {
+        paddingBottom: 15,
+        borderColor: '#656D73',
+        borderBottomWidth: 1,
+        flex: 1
     },
-    memberName:{
+    memberName: {
         fontFamily: platform.fontFamily,
         fontSize: 22,
         lineHeight: 31,
     },
-    memberType:{
+    memberType: {
         color: platform.brandWarningAccent,
         fontFamily: platform.fontFamily,
         fontSize: 16,

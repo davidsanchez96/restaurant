@@ -4,18 +4,38 @@ import SignStack, {signStackStyle} from "./routers/SignStack";
 import {connect} from "react-redux";
 import NavigationDrawer from "./routers/NavigationDrawer";
 import {getRestaurants} from "./actions/restaurant";
-
-
+import {variables} from "native-base";
+import Api from "./actions/api/api"
 class App extends React.Component {
 
 
     constructor(props) {
         super(props);
-        this.props.getRestaurants();
+
+        variables.androidRipple = false;
     }
 
+    componentWillMount() {
+
+    }
+
+    async loadPrefetch() {
+        Api.jwt(this.props.user.token);
+        let restaurants = await this.props.getRestaurants();
+        Object.keys(restaurants.restaurants).forEach((item, i) => {
+            Image.prefetch(restaurants.restaurants[item].photos[0].url);
+        });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(this.props.isLoading!==nextProps.isLoading)
+        {
+            this.loadPrefetch();
+        }
+    }
 
     render() {
+
         StatusBar.setBarStyle('light-content', true);
         if (this.props.showSign) {
             return (
@@ -37,12 +57,14 @@ class App extends React.Component {
 function bindAction(dispatch) {
     return {
         getRestaurants: () => {
-            dispatch(getRestaurants());
+            return dispatch(getRestaurants());
         }
     };
 }
 const mapStateToProps = state => ({
     logged: state.user.logged,
+    restaurants: state.restaurant.restaurants,
+    user: state.user,
     showSign: state.user.showSign,
 });
 const Chester = connect(mapStateToProps, bindAction)(App);

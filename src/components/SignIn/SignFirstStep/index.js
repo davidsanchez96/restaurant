@@ -10,7 +10,7 @@ import SignPhoneInput from "../SignPhoneInput/index";
 import H3 from "../../../../native-base-theme/components/H3";
 import platform from "../../../../native-base-theme/variables/platform";
 import Spinner from "react-native-loading-spinner-overlay";
-import { Keyboard } from 'react-native';
+import {Keyboard} from 'react-native';
 
 class SignFirstStep extends React.Component {
 
@@ -53,11 +53,11 @@ class SignFirstStep extends React.Component {
 
                             <View style={styles.image}>
                                 <Image
-                                    source={require('../../../../assets/images/login&registration/login-logo.png')}></Image>
+                                    source={require('../../../../assets/images/login&registration/login-logo.png')}/>
                             </View>
 
                             <View style={styles.message}>
-                                <Text style={{...styles.messageText, ...H3()}}>Введите свой номер телефона, чтобы
+                                <Text style={styles.messageText}>fВведите свой номер телефона, чтобы
                                     вступить в
                                     программу
                                     лояльности и получать скидки!
@@ -84,11 +84,11 @@ class SignFirstStep extends React.Component {
                                 </Button>
 
 
-                                <View>
+                                <View >
                                     <Button transparent warning onPress={() => {
                                         this.props.signInAfter()
                                     }}>
-                                        <Text>Вступить в клуб позже ></Text>
+                                        <Text style={{lineHeight: 29, fontSize: 20}}>Вступить в клуб позже ></Text>
                                     </Button>
                                 </View>
 
@@ -122,39 +122,39 @@ const styles = {
 
     },
     image: {
-        height: 150,
+        height: 129,
         alignItems: 'center',
-        paddingTop: 40,
+        marginTop: 44,
     },
     message: {
-        paddingTop: 60,
-        paddingBottom: 20,
+        paddingTop: 20,
+        paddingBottom: 16,
         alignItems: 'center',
     },
     messageText: {
         width: 280,
-
+        lineHeight: 29,
         color: '#fff',
+        fontSize: 20,
         textAlign: 'center'
     },
     phoneBlock: {
         flexDirection: 'row',
         justifyContent: 'center',
         borderColor: '#d6d6d6',
-        paddingBottom: 10,
+        paddingBottom: 6,
         borderBottomWidth: 1,
-
     },
     phone: {
-        width: 200,
+        width: 175,
     },
 
     button: {
-        paddingTop: 20,
+        paddingTop: 15,
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingRight: 15,
-        paddingLeft: 15
+
+        paddingRight: 16,
+        paddingLeft: 16
     },
 };
 
