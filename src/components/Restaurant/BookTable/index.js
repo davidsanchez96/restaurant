@@ -10,7 +10,7 @@ import {signStackStyle} from "../../../routers/SignStack";
 import RestaurantLocation from "../common/RestaurantLocation/index";
 import RestaurantContact from "../common/RestaurantContact/index";
 import {connect} from "react-redux";
-import Collapsible from 'react-native-collapsible';
+import SelectDate from "./SelectDate";
 
 
 class BookTable extends React.Component {
@@ -20,18 +20,29 @@ class BookTable extends React.Component {
         isOpen: false
     };
 
+    setModalVisible(visible) {
+        this.setState({isOpen: visible});
+    }
+
     render() {
 
-
+        //let restaurant =this.props.restaurants[this.props.navigation.state.params.key];
+        let restaurant = {photos: []}
         return (
 
 
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
 
                 <View style={styles.container}>
+
+                    <SelectDate isOpen={this.state.isOpen} onClose={() => {
+                        this.setState({isOpen: false});
+                    }}/>
+
+
                     <Container >
                         <Content>
-                            <View style={{paddingHorizontal: 16,marginBottom: 11}}>
+                            <View style={{paddingHorizontal: 16, marginBottom: 11}}>
                                 <Text style={styles.header}>
 
                                     Бронирование стола
@@ -43,75 +54,73 @@ class BookTable extends React.Component {
 
                             </View>
                             <TouchableOpacity onPress={() => {
-                                this.setState({isOpen: !this.state.isOpen})
+                                this.setModalVisible(true)
                             }}>
                                 <View style={styles.dropdownHeader}>
 
 
                                     <Text style={styles.dropdownHeaderText}>2 человека, сегодня, 18:30</Text>
-                                    {
-                                        !this.state.isOpen ? <ChesterIcon name="arrow-down-orange-12" size={8}
-                                                                         color={platform.brandWarning}
-                                                                         style={styles.scheduleIcon}/> :
-                                            <ChesterIcon name="arrow-up-12" size={8} color={platform.brandWarning}
-                                                         style={styles.scheduleIcon}/>
-                                    }
+
+                                    <ChesterIcon name="arrow-down-orange-12" size={8}
+                                                 color={platform.brandWarning}
+                                                 style={styles.scheduleIcon}/>
+
 
                                 </View>
                             </TouchableOpacity>
-                            <Collapsible collapsed={!this.state.isOpen}>
-                                <ScrollView horizontal style={styles.timeSheet}>
 
-                                    <View style={{flexDirection: 'row'}}>
-                                        <TouchableOpacity style={styles.timeButton} onPress={() => {
-                                            this.props.navigation.navigate('BookTableConfirm')
-                                        }}>
-                                            <Text style={styles.timeButtonText}>
-                                                18:00
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.timeButton}>
-                                            <Text style={styles.timeButtonText}>
-                                                18:15
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <View style={styles.timeButtonFill}>
-                                            <Text style={styles.timeButtonFillText}>
-                                                18:30
-                                            </Text>
-                                        </View>
-                                        <TouchableOpacity style={styles.timeButton}>
-                                            <Text style={styles.timeButtonText}>
-                                                18:45
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.timeButton}>
-                                            <Text style={styles.timeButtonText}>
-                                                19:00
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <View style={styles.timeButtonFill}>
-                                            <Text style={styles.timeButtonFillText}>
-                                                19:15
-                                            </Text>
-                                        </View>
+                            <ScrollView horizontal style={styles.timeSheet}>
+
+                                <View style={{flexDirection: 'row'}}>
+                                    <TouchableOpacity style={styles.timeButton} onPress={() => {
+                                        this.props.navigation.navigate('BookTableConfirm')
+                                    }}>
+                                        <Text style={styles.timeButtonText}>
+                                            18:00
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.timeButton}>
+                                        <Text style={styles.timeButtonText}>
+                                            18:15
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <View style={styles.timeButtonFill}>
+                                        <Text style={styles.timeButtonFillText}>
+                                            18:30
+                                        </Text>
                                     </View>
+                                    <TouchableOpacity style={styles.timeButton}>
+                                        <Text style={styles.timeButtonText}>
+                                            18:45
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.timeButton}>
+                                        <Text style={styles.timeButtonText}>
+                                            19:00
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <View style={styles.timeButtonFill}>
+                                        <Text style={styles.timeButtonFillText}>
+                                            19:15
+                                        </Text>
+                                    </View>
+                                </View>
 
 
-                                </ScrollView>
-                            </Collapsible>
+                            </ScrollView>
+
 
                             <View style={{paddingHorizontal: 16}}>
-                                <Text style={{...styles.header, marginBottom: 0,marginTop:19}}>
+                                <Text style={{...styles.header, marginBottom: 0, marginTop: 19}}>
                                     Рестобар Chester
                                 </Text>
                                 <RestaurantLocation
-                                    restaurant={this.props.restaurants[this.props.navigation.state.params.key]}/>
+                                    restaurant={restaurant}/>
                             </View>
 
 
                             <View style={{marginTop: 15}}>
-                                <RestaurantContact restaurant={this.props.restaurants[this.props.navigation.state.params.key]}/>
+                                <RestaurantContact restaurant={restaurant}/>
                             </View>
 
                         </Content>

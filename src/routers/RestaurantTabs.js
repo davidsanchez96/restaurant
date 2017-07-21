@@ -79,7 +79,7 @@ const RestaurantTabs = TabNavigator({
     tabBarPosition: 'top',
     backBehavior:"none",
     swipeEnabled:true,
-    lazy:false,
+    lazy:true,
     tabBarOptions: defaultTobBar
 });
 

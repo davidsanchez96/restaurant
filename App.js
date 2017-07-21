@@ -2,7 +2,7 @@ import React from 'react';
 import ChesterWithRedux from './src/setup'
 import {AppLoading, Font} from 'expo';
 import cacheAssetsAsync from "./utilities/cacheAssetsAsync";
-
+require('moment/locale/ru');
 
 export default class App extends React.Component {
 

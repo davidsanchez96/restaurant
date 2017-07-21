@@ -18,9 +18,9 @@ class Restaurant extends React.Component {
     };
 
     componentWillMount() {
-        this.setState({interval: setInterval(() => {
+       /* this.setState({interval: setInterval(() => {
             this.setState({position: this.state.position === this.props.restaurants[this.props.navigation.state.params.key].photos.length-1 ? 0 : this.state.position + 1});
-        }, 5000)});
+        }, 5000)});*/
     }
 
     componentWillUnmount() {
@@ -30,7 +30,7 @@ class Restaurant extends React.Component {
     render() {
 
         //let restaurant =this.props.restaurants[this.props.navigation.state.params.key];
-        let restaurant ={photos:[],sh}
+        let restaurant ={photos:[]}
         return (
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
 

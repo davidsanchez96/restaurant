@@ -3,12 +3,15 @@ import {
     Body, Button, Card, CardItem, Container, Content, Icon, Left, List, ListItem, Right, Text,
     View
 } from 'native-base';
-import {Image, TouchableOpacity} from "react-native";
+import {Image, TouchableOpacity, Animated, LayoutAnimation, ScrollView, Modal, Picker} from "react-native";
 import platform from "../../../../native-base-theme/variables/platform";
 import ChesterIcon from "../../Common/ChesterIcon/index";
 import {signStackStyle} from "../../../routers/SignStack";
 import Collapsible from 'react-native-collapsible';
 import SearchInput from "../common/SearchInput/index";
+import CategoryList from "../Category/CategoryList";
+
+
 const SECTIONS = [
     {
         title: 'Мясо'
@@ -41,9 +44,11 @@ const SECTIONS = [
 export default class Menu extends React.Component {
 
     state = {
-        activeSection: null
+        activeSection: null,
+        results: null,
+        isOpen: false,
+        hour: 30
     };
-
 
     changeState(item) {
 
@@ -60,8 +65,7 @@ export default class Menu extends React.Component {
 
     }
 
-
-    _renderHeader(section,category) {
+    _renderHeader(section, category) {
         return (
             <View>
                 <TouchableOpacity
@@ -71,12 +75,10 @@ export default class Menu extends React.Component {
                     onPress={() => {
 
 
-                        if(category)
-                        {
+                        if (category) {
                             this.changeState(section.title)
                         }
-                        else
-                        {
+                        else {
                             this.props.navigation.navigate('Category', {name: section.title})
                         }
 
@@ -132,40 +134,78 @@ export default class Menu extends React.Component {
     }
 
 
+    onStartSearch(text) {
+      
+        let fake = [
+            {
+                name: "Салат греческий",
+                id: 12,
+                weight: 280,
+                price: 240,
+                fadeAnim: new Animated.Value(0),
+            }, {
+                name: "Руккола с беконом",
+                id: 14,
+                weight: 320,
+                price: 340,
+                fadeAnim: new Animated.Value(0),
+            },
+            {
+                name: "Салат из баклажанов", id: 16, weight: 280, price: 300,
+                fadeAnim: new Animated.Value(0),
+            },
+            {
+                name: "Салат греческий",
+                id: 119,
+                weight: 280,
+                price: 240,
+                fadeAnim: new Animated.Value(0),
+            }, {
+                name: "Руккола с беконом",
+                id: 20,
+                weight: 320,
+                price: 340,
+                fadeAnim: new Animated.Value(0),
+            },
+            {
+                name: "Салат из баклажанов", id: 21, weight: 280, price: 300,
+                fadeAnim: new Animated.Value(0),
+            }
+        ];
+        if (text.length > 0) {
+
+            this.setState({
+                text: text,
+                results: fake.filter((item) => item.name.includes(text))
+            });
+        }
+        else {
+            this.setState({
+                results: null
+            })
+        }
+
+    }
+
+
     render() {
 
         return (
 
             <View style={styles.container}>
-                <Container>
-                    <Content>
 
 
-                        <SearchInput onChangeText={() => {
+                <Container style={{flex: 1}}>
+                    <Content keyboardShouldPersistTaps="always" style={{flex: 1, minHeight: '100%'}}>
 
+
+                        <SearchInput onChangeText={(text) => {
+
+                            this.onStartSearch(text)
                         }}/>
-                        {SECTIONS.map((item, i) => {
-
-                            if (item.items) {
-                                return (
-                                    <View key={i}>
-                                        {this._renderHeader(item,true)}
-                                        <Collapsible collapsed={this.state.activeSection !== item.title}>
-                                            {this.state.activeSection === item.title ? this._renderContent(item) :
-                                                <View/>}
-                                        </Collapsible>
-
-                                    </View>)
-                            }
-                            else {
-                                return (
-                                    <View key={i}>
-                                        {this._renderHeader(item)}
-                                    </View>)
-                            }
 
 
-                        })}
+                        {this._renderList()}
 
 
                     </Content>
@@ -173,6 +213,60 @@ export default class Menu extends React.Component {
             </View>
 
         );
+    }
+
+
+    _renderList() {
+
+        if (!this.state.results) {
+            return SECTIONS.map((item, i) => {
+                if (item.items) {
+                    return (
+                        <View key={i}>
+                            {this._renderHeader(item, true)}
+                            <Collapsible collapsed={this.state.activeSection !== item.title}>
+                                {this.state.activeSection === item.title ? this._renderContent(item) :
+                                    <View/>}
+                            </Collapsible>
+                        </View>)
+                }
+                else {
+                    return (
+                        <View key={i}>
+                            {this._renderHeader(item)}
+                        </View>)
+                }
+
+            });
+        }
+        else {
+            if (this.state.results.length > 0) {
+                return (<CategoryList data={this.state.results}/>)
+            }
+            else {
+                return <View style={{alignItems: 'center', marginTop: 40}}>
+
+                    <View style={{alignItems: 'center', width: 300}}>
+                        <Text style={{
+                            fontSize: 22,
+                            lineHeight: 33,
+                            textAlign:'center'
+                        }}>Не найдено</Text>
+                        <Text style={{
+                            fontSize: 16,
+                            lineHeight: 24,
+                            textAlign:'center'
+                        }}>Поиск «{this.state.text}» не дал результатов. Попытайтесь задать что-нибудь другое.</Text>
+
+
+                    </View>
+
+                </View>
+            }
+
+        }
+
+
     }
 }
 

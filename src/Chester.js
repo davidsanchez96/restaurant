@@ -22,9 +22,13 @@ class App extends React.Component {
     async loadPrefetch() {
         Api.jwt(this.props.user.token);
         let restaurants = await this.props.getRestaurants();
-        Object.keys(restaurants.restaurants).forEach((item, i) => {
-            Image.prefetch(restaurants.restaurants[item].photos[0].url);
-        });
+        if(restaurants.restaurants)
+        {
+            Object.keys(restaurants.restaurants).forEach((item, i) => {
+                Image.prefetch(restaurants.restaurants[item].photos[0].url);
+            });
+        }
+
     }
 
     componentWillReceiveProps(nextProps) {

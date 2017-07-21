@@ -19,13 +19,15 @@ export default class RestaurantContact extends React.Component {
     currentDay = null;
 
 
-
     componentWillMount() {
 
 
-        let timeService = new TimeService();
-        this.days = timeService.getTimesheet(this.props.restaurant.schedule);
-        this.currentDay = this.days.find((item) => item.isCurrent);
+        if (this.props.restaurant.schedule) {
+            let timeService = new TimeService();
+            this.days = timeService.getTimesheet(this.props.restaurant.schedule);
+            this.currentDay = this.days.find((item) => item.isCurrent);
+        }
+
     }
 
     openDirections() {
@@ -52,92 +54,93 @@ export default class RestaurantContact extends React.Component {
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                <View style={styles.contactBlock}>
-                    <View >
+        return <Text>dd</Text>;
+        /*return (
+         <View style={styles.container}>
+         <View style={styles.contactBlock}>
+         <View >
 
 
-                        <View style={styles.status}>
-                            <ChesterIcon name="time-16" size={16} color={platform.brandWarning}
-                                         style={styles.timeIcon}/>
-                            <Text style={styles.statusText}>{ this.currentDay.isOpen ? 'Сегодня открыто' : "Закрыто"}</Text>
+         <View style={styles.status}>
+         <ChesterIcon name="time-16" size={16} color={platform.brandWarning}
+         style={styles.timeIcon}/>
+         <Text style={styles.statusText}>{ this.currentDay.isOpen ? 'Сегодня открыто' : "Закрыто"}</Text>
 
-                        </View>
+         </View>
 
-                        <View style={styles.statusBottom}>
+         <View style={styles.statusBottom}>
 
-                            <Text
-                                style={styles.timeTableText}>{this.isOpen ? (this.currentDay.start + " - " + this.currentDay.end) : ""}</Text>
-                            <TouchableOpacity onPress={() => {
-                                this.setState({isOpenTime: !this.state.isOpenTime})
-                            }}>
-                                <View style={styles.schedule}>
-                                    <Text style={styles.scheduleText}>Режим работы</Text>
+         <Text
+         style={styles.timeTableText}>{this.isOpen ? (this.currentDay.start + " - " + this.currentDay.end) : ""}</Text>
+         <TouchableOpacity onPress={() => {
+         this.setState({isOpenTime: !this.state.isOpenTime})
+         }}>
+         <View style={styles.schedule}>
+         <Text style={styles.scheduleText}>Режим работы</Text>
 
-                                    {
-                                        this.state.isOpenTime ? <ChesterIcon name="arrow-down-orange-12" size={8}
-                                                                             color={platform.brandWarning}
-                                                                             style={styles.scheduleIcon}/> :
-                                            <ChesterIcon name="arrow-up-12" size={8} color={platform.brandWarning}
-                                                         style={styles.scheduleIcon}/>
-                                    }
-
-
-                                </View>
-                            </TouchableOpacity>
-
-                        </View>
-                    </View>
-                    <View style={styles.circleBlock}>
-
-                        <TouchableOpacity style={{...styles.circle, marginRight: 15}}
-                                          onPress={() => {
-                                              this.openPhone()
-                                          }}>
-                            <ChesterIcon name="phone-16" size={18} color={platform.brandWarning}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.circle} onPress={() => {
-                            this.openDirections()
-                        }}>
-                            <ChesterIcon name="location-16" size={18} color={platform.brandWarning}/>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
-                <View >
-                    <Collapsible collapsed={this.state.isOpenTime}>
-                        <View style={styles.timesheet}>
-
-                            {
-
-                                this.days.map((day) => {
-                                    let styleDay = styles.oneDay;
-                                    if (day.isCurrent) {
-                                        styleDay = {...styleDay, ...styles.currentOneDay}
-                                    }
-                                    let styleName = styles.oneDayName;
-                                    if (day.day === 6 || day.day === 0) {
-                                        styleName = {...styleName, color: platform.brandDanger}
-                                    }
+         {
+         this.state.isOpenTime ? <ChesterIcon name="arrow-down-orange-12" size={8}
+         color={platform.brandWarning}
+         style={styles.scheduleIcon}/> :
+         <ChesterIcon name="arrow-up-12" size={8} color={platform.brandWarning}
+         style={styles.scheduleIcon}/>
+         }
 
 
-                                    return (
-                                        <View style={styleDay} key={day.id}>
-                                            <Text style={styleName}>{day.name}</Text>
-                                            <Text style={styles.oneDayStart}>{day.start}</Text>
-                                            <Text style={styles.oneDayEnd}>{day.end}</Text>
-                                        </View>)
-                                })
-                            }
+         </View>
+         </TouchableOpacity>
+
+         </View>
+         </View>
+         <View style={styles.circleBlock}>
+
+         <TouchableOpacity style={{...styles.circle, marginRight: 15}}
+         onPress={() => {
+         this.openPhone()
+         }}>
+         <ChesterIcon name="phone-16" size={18} color={platform.brandWarning}/>
+         </TouchableOpacity>
+         <TouchableOpacity style={styles.circle} onPress={() => {
+         this.openDirections()
+         }}>
+         <ChesterIcon name="location-16" size={18} color={platform.brandWarning}/>
+         </TouchableOpacity>
+         </View>
+         </View>
+
+         <View >
+         <Collapsible collapsed={this.state.isOpenTime}>
+         <View style={styles.timesheet}>
+
+         {
+
+         this.days.map((day) => {
+         let styleDay = styles.oneDay;
+         if (day.isCurrent) {
+         styleDay = {...styleDay, ...styles.currentOneDay}
+         }
+         let styleName = styles.oneDayName;
+         if (day.day === 6 || day.day === 0) {
+         styleName = {...styleName, color: platform.brandDanger}
+         }
 
 
-                        </View>
-                    </Collapsible>
-                </View>
-            </View>
-        );
-    }
+         return (
+         <View style={styleDay} key={day.id}>
+         <Text style={styleName}>{day.name}</Text>
+         <Text style={styles.oneDayStart}>{day.start}</Text>
+         <Text style={styles.oneDayEnd}>{day.end}</Text>
+         </View>)
+         })
+         }
+
+
+         </View>
+         </Collapsible>
+         </View>
+         </View>
+    );*/
+}
 }
 
 

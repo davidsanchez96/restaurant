@@ -6,11 +6,15 @@ import Chester from './Chester';
 import configureStore from './configureStore';
 import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform'
+import * as moment from "moment";
+
+
 
 export default class ChesterWithRedux extends Component {
 
     constructor() {
         super();
+        moment.locale('ru');
         this.state = {
             isLoading: true,
             store: configureStore(() => {
