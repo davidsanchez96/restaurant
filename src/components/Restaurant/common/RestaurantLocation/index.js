@@ -61,7 +61,8 @@ export default class RestaurantLocation extends React.Component {
 
         return <View style={styles.infoLine}>
             <ChesterIcon name="location-16" size={16} color={platform.brandWarning}/>
-            <Text style={styles.infoAddress}>{this.props.restaurant.address_title}</Text>
+            <Text
+                style={styles.infoAddress}>{this.props.restaurant.address_title + (this.state.distance ? ',' : '') }</Text>
             <Text style={styles.infoDistance}>{this.state.distance ? this.state.distance : ""}</Text>
         </View>
 
@@ -83,7 +84,7 @@ const styles = {
     infoAddress: {
         fontSize: 18,
         paddingLeft: 6,
-        paddingRight: 6,
+        paddingRight: 4,
         lineHeight: 26
     },
 }

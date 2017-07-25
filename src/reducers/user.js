@@ -1,4 +1,3 @@
-
 import {
     CONFIRM_CODE_FULFILLED,
     CONFIRM_CODE_PENDING, CONFIRM_CODE_REJECTED,
@@ -9,18 +8,18 @@ import moment from "moment";
 
 export type State = {
     name: string,
-    phoneNumber:string,
-    logged:boolean
+    phoneNumber: string,
+    logged: boolean
 }
 
 const initialState = {
     name: '',
-    phoneNumber:'',
-    logged:false,
-    showSign:true
+    phoneNumber: '',
+    logged: false,
+    showSign: true
 };
 
-export default function (state:State = initialState, action) {
+export default function (state: State = initialState, action) {
     if (action.type === SIGN_IN) {
         return {
             ...state,
@@ -43,40 +42,41 @@ export default function (state:State = initialState, action) {
         return {
             ...state,
             sent: moment(),
-            token:action.payload.token,
-            sendCodePending:false
+            token: action.payload.token,
+            sendCodePending: false
         };
     }
     if (action.type === SEND_CODE_PENDING) {
         return {
             ...state,
-            sendCodePending:true
+            sendCodePending: true
         };
     }
     if (action.type === SEND_CODE_REJECTED) {
         return {
             ...state,
-            sendCodePending:false
+            sendCodePending: false
         };
     }
     if (action.type === CONFIRM_CODE_FULFILLED) {
         return {
             ...state,
             sent: moment(),
-            confirmCodePending:false,
+            phone: action.payload.phone,
+            confirmCodePending: false,
             showSign: false
         };
     }
     if (action.type === CONFIRM_CODE_PENDING) {
         return {
             ...state,
-            confirmCodePending:true
+            confirmCodePending: true
         };
     }
     if (action.type === CONFIRM_CODE_REJECTED) {
         return {
             ...state,
-            confirmCodePending:false
+            confirmCodePending: false
         };
     }
     return state;

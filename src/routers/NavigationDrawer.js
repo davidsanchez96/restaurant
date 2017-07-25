@@ -5,11 +5,12 @@ import {Button, Text, View} from "native-base";
 import {setSignState, signOut} from "../actions/user";
 import {connect} from "react-redux";
 import {Constants} from 'expo';
-import {Image} from "react-native";
+import {Image, ScrollView} from "react-native";
 import UserInfo from "./components/UserInfo/index";
 import platform from "../../native-base-theme/variables/platform";
 import ChesterIcon from "../components/Common/ChesterIcon/index";
 
+import Restaurants from "../components/Restaurant/Restaurants";
 export default NavigationDrawer = DrawerNavigator({
         Restaurant: {
             screen: RestaurantsStack,
@@ -73,7 +74,8 @@ class CustomNavigationDrawer extends React.Component {
         return (
             <Image source={require('../../assets/images/navigation/nav-bg.png')} style={styles.background}>
 
-                <View style={styles.container}>
+
+                <ScrollView style={styles.container}>
                     <View style={styles.userInfo}>
                         <UserInfo {...this.props} />
                     </View>
@@ -82,35 +84,36 @@ class CustomNavigationDrawer extends React.Component {
                                  activeTintColor={platform.brandWarning}
                                  activeBackgroundColor="transparent"
                                  labelStyle={styles.drawerItemsText}
+                                 style={{marginTop: -20}}
                                  inactiveTintColor="#fff"
+
                     />
 
-                        <Button bordered warning rounded style={styles.scanBarButton} >
-                            <ChesterIcon name="camera-24" size={20} color={platform.brandWarning}
-                                         style={{marginTop: -5, paddingRight: 5}}/>
-                            <Text style={styles.scanBarButtonText} uppercase={false}>Сканировать чек</Text>
-                        </Button>
+
+                    <Button bordered warning rounded style={styles.scanBarButton}>
+                        <ChesterIcon name="camera-24" size={20} color={platform.brandWarning}
+                                     style={{marginTop: -5, paddingRight: 5}}/>
+                        <Text style={styles.scanBarButtonText} uppercase={false}>Сканировать чек</Text>
+                    </Button>
 
 
+                </ScrollView>
 
-                </View>
-            </Image>)
+
+            </Image>
+        )
     }
 }
 
 function bindAction(dispatch) {
-    return {
-
-    };
+    return {};
 }
-const mapStateToProps = state => ({
-
-});
+const mapStateToProps = state => ({});
 
 const styles = {
     container: {
         paddingTop: Constants.statusBarHeight,
-        flex:1
+        flex: 1
     },
     background: {
         flex: 1,
@@ -118,23 +121,26 @@ const styles = {
         height: null,
     },
     userInfo: {
-        marginBottom: 15
+        marginBottom: 51
     },
     drawerItemsText: {
         fontFamily: platform.fontFamily,
         fontSize: 22,
+        lineHeight: 31,
         flex: 1,
         textAlign: 'center',
-        fontWeight:"normal"
+        fontWeight: "normal",
+        margin:0,
+        marginTop:22
     },
     scanBarButton: {
         alignSelf: "center",
-        marginTop: 'auto',
-        marginBottom:35,
-        height:36
+        marginTop: 63,
+        marginBottom: 35,
+        height: 36
     },
-    scanBarButtonText:{
-        fontSize:19
+    scanBarButtonText: {
+        fontSize: 19
     }
 };
 

@@ -88,32 +88,6 @@ class Restaurants extends React.Component {
                                 </TouchableOpacity>
                             })}
 
-                            <TouchableOpacity onPress={() => {
-                                this.props.navigation.navigate('Restaurant')
-                            }}>
-
-
-                                <Card style={{...styles.card, ...styles.cardTransparent}}>
-                                    <CardItem cardBody style={styles.cardTransparent}>
-                                        <Image source={require('../../../../assets/images/cafe-1.png')}
-                                               style={styles.image}/>
-                                    </CardItem>
-                                    <CardItem style={styles.info}>
-
-                                        <Text style={styles.infoHeader}>Рестобар</Text>
-
-
-
-                                        <View style={styles.infoLine}>
-                                            <ChesterIcon name="time-16" size={16} color={platform.brandWarning}/>
-                                            <Text style={styles.time}>Открыто</Text>
-                                        </View>
-
-                                    </CardItem>
-
-
-                                </Card>
-                            </TouchableOpacity>
 
                         </Content>
                     </Container>

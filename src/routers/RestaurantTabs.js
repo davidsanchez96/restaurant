@@ -15,7 +15,7 @@ const defaultTobBar ={
         shadowOffset: {width: 0, height: 4},
         shadowOpacity: 7,
         shadowRadius: 8,
-        zIndex:5
+        borderTopWidth:0
     },
     tabStyle: {
         paddingLeft: 0,
@@ -24,7 +24,7 @@ const defaultTobBar ={
         marginLeft:5,
         paddingBottom:16,
         paddingTop:16        ,
-        zIndex:5
+
     },
     upperCaseLabel: false,
     labelStyle: {
@@ -79,7 +79,7 @@ const RestaurantTabs = TabNavigator({
     tabBarPosition: 'top',
     backBehavior:"none",
     swipeEnabled:true,
-    lazy:true,
+    lazy:false,
     tabBarOptions: defaultTobBar
 });
 

@@ -18,9 +18,9 @@ class Restaurant extends React.Component {
     };
 
     componentWillMount() {
-       /* this.setState({interval: setInterval(() => {
+        this.setState({interval: setInterval(() => {
             this.setState({position: this.state.position === this.props.restaurants[this.props.navigation.state.params.key].photos.length-1 ? 0 : this.state.position + 1});
-        }, 5000)});*/
+        }, 5000)});
     }
 
     componentWillUnmount() {
@@ -29,8 +29,7 @@ class Restaurant extends React.Component {
 
     render() {
 
-        //let restaurant =this.props.restaurants[this.props.navigation.state.params.key];
-        let restaurant ={photos:[]}
+        let restaurant =this.props.restaurants[this.props.navigation.state.params.key];
         return (
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
 
@@ -83,7 +82,6 @@ const styles = {
         width: "100%"
     },
     infoBlock: {
-
         paddingHorizontal: 16,
         paddingBottom: 19,
         paddingRight: 30,
@@ -96,7 +94,7 @@ const styles = {
         color: platform.brandWarning,
         fontSize: 28,
         lineHeight: 40,
-        marginTop:10
+        marginTop:14
     },
     infoText: {
         fontSize: 14,

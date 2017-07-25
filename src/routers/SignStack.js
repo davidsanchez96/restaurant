@@ -29,7 +29,7 @@ export default SignStack = StackNavigator({
             top: 0,
             left: 0,
             right: 0,
-
+            borderBottomWidth: 0
         },
         headerTitleStyle: {
             fontSize: 24,

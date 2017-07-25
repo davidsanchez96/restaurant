@@ -8,25 +8,24 @@ class UserInfo extends React.Component {
     render() {
 
 
-        if(this.props.logged)
-        {
+        if (this.props.logged) {
 
         }
-        else
-        {
+        else {
             return (<View style={styles.container}>
 
                 <View style={styles.avatarOuter}>
 
                     <View style={styles.avatarInner}>
 
-                        <Image source={require('../../../../assets/images/navigation/user_icon.png')}/>
+                        <Image source={require('../../../../assets/images/navigation/user_icon.png')}
+                               style={{width: 48, resizeMode: 'contain'}}/>
                     </View>
                 </View>
 
                 <Text style={styles.bottomAvatarText}>Ваш аккаунт</Text>
                 <View>
-                    <Button  style={styles.button} rounded warning onPress={() => {
+                    <Button style={styles.button} rounded warning onPress={() => {
                         this.props.signIn()
                     }}>
                         <Text style={styles.buttonText}>Войти ></Text>
@@ -61,7 +60,7 @@ export default UserInfoSwag;
  </View>*/
 const styles = {
     container: {
-        paddingTop: 20,
+        paddingTop: 15,
         alignItems: "center"
     },
     avatarOuter: {
@@ -71,13 +70,14 @@ const styles = {
         borderColor: "#d1d3c9",
         alignItems: "center",
         justifyContent: "center",
-        borderWidth: 2
+        borderWidth: 2,
+        marginBottom: 10
     },
     avatarInner: {
         width: 92,
         height: 92,
         borderRadius: 92 / 2,
-        backgroundColor: "#d1d3c9",
+        backgroundColor: "#7A8187",
         alignItems: "center",
         justifyContent: "center",
         paddingLeft: 10
@@ -85,18 +85,19 @@ const styles = {
     bottomAvatarText: {
         backgroundColor: 'transparent',
         fontSize: 28,
+        lineHeight: 35,
         fontFamily: platform.fontFamilyAccent,
         textAlign: 'center',
-        marginBottom:10
+        marginBottom: 9
     },
-    button:{
-        height:32,
-        minWidth:128
+    button: {
+        height: 32,
+        minWidth: 128
 
     },
-    buttonText:{
-        fontSize:19,
-        flex:1,
-        textAlign:"center"
+    buttonText: {
+        fontSize: 19,
+        flex: 1,
+        textAlign: "center"
     }
 }

@@ -12,6 +12,8 @@ import RestaurantContact from "../common/RestaurantContact/index";
 import {connect} from "react-redux";
 import SelectDate from "./SelectDate";
 
+import moment from "moment";
+import 'moment-round'
 
 class BookTable extends React.Component {
 
@@ -20,14 +22,66 @@ class BookTable extends React.Component {
         isOpen: false
     };
 
+    constructor() {
+        super();
+        let currentHour = parseInt(moment().format('H'));
+        let currentMinute = parseInt(moment().format('m'));
+        if (currentHour < 10) {
+            this.state.date = moment().floor(24, 'hours').add(10, 'hours');
+        }
+        else if (currentHour < 23 || (currentHour === 23 && currentMinute <= 30)) {
+
+            if (currentHour + 2 < 23) {
+                this.state.date = moment().add(2, 'hours').ceil(30, 'minutes');
+            }
+            else {
+                this.state.date = moment().ceil(30, 'minutes');
+            }
+        }
+        else
+        {
+            this.state.date = moment().ceil(24, 'hours').add(10, 'hours');
+        }
+
+
+        this.state.count = 2;
+    }
+
+
+    getCurrentSelection() {
+        let dateFormatted = '';
+        dateFormatted += this.state.count + ' ' + (this.state.count === 1 || this.state.count >= 5 ? 'человек' : 'человека');
+        dateFormatted += ', ';
+        if (this.state.date.day() === moment().day()) {
+            dateFormatted += 'сегодня, ' + this.state.date.format('HH:mm');
+        }
+        else {
+            dateFormatted += this.state.date.format('ddd D MMMM, HH:mm');
+        }
+        return dateFormatted;
+    }
+
+    getCurrentSelectionTabs() {
+        let startDate = this.state.date.clone().add(-30, 'minutes');
+        let result = [];
+        for (let i = 0; i < 5; i++) {
+            result.push({
+                label: startDate.format('HH:mm'),
+                value: startDate.clone()
+            });
+            startDate.add(15, 'minutes');
+        }
+        return result;
+    }
+
     setModalVisible(visible) {
         this.setState({isOpen: visible});
     }
 
     render() {
 
-        //let restaurant =this.props.restaurants[this.props.navigation.state.params.key];
-        let restaurant = {photos: []}
+        let restaurant = this.props.restaurants[this.props.navigation.state.params.key];
+
         return (
 
 
@@ -35,9 +89,14 @@ class BookTable extends React.Component {
 
                 <View style={styles.container}>
 
-                    <SelectDate isOpen={this.state.isOpen} onClose={() => {
-                        this.setState({isOpen: false});
-                    }}/>
+                    <SelectDate isOpen={this.state.isOpen}
+                                date={this.state.date}
+                                onDateSelected={(selected) => {
+                                    this.setState({date: selected.date, count: selected.count});
+                                }}
+                                onClose={() => {
+                                    this.setState({isOpen: false});
+                                }}/>
 
 
                     <Container >
@@ -59,10 +118,10 @@ class BookTable extends React.Component {
                                 <View style={styles.dropdownHeader}>
 
 
-                                    <Text style={styles.dropdownHeaderText}>2 человека, сегодня, 18:30</Text>
+                                    <Text style={styles.dropdownHeaderText}>{this.getCurrentSelection()}</Text>
 
                                     <ChesterIcon name="arrow-down-orange-12" size={8}
-                                                 color={platform.brandWarning}
+                                                 color={platform.brandFontAccent}
                                                  style={styles.scheduleIcon}/>
 
 
@@ -70,43 +129,19 @@ class BookTable extends React.Component {
                             </TouchableOpacity>
 
                             <ScrollView horizontal style={styles.timeSheet}>
-
                                 <View style={{flexDirection: 'row'}}>
-                                    <TouchableOpacity style={styles.timeButton} onPress={() => {
-                                        this.props.navigation.navigate('BookTableConfirm')
-                                    }}>
-                                        <Text style={styles.timeButtonText}>
-                                            18:00
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.timeButton}>
-                                        <Text style={styles.timeButtonText}>
-                                            18:15
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={styles.timeButtonFill}>
-                                        <Text style={styles.timeButtonFillText}>
-                                            18:30
-                                        </Text>
-                                    </View>
-                                    <TouchableOpacity style={styles.timeButton}>
-                                        <Text style={styles.timeButtonText}>
-                                            18:45
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.timeButton}>
-                                        <Text style={styles.timeButtonText}>
-                                            19:00
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={styles.timeButtonFill}>
-                                        <Text style={styles.timeButtonFillText}>
-                                            19:15
-                                        </Text>
-                                    </View>
+                                    {
+                                        this.getCurrentSelectionTabs().map((item, i) => {
+                                            return <TouchableOpacity style={styles.timeButton} key={i} onPress={() => {
+                                                this.props.navigation.navigate('BookTableConfirm')
+                                            }}>
+                                                <Text style={styles.timeButtonText}>
+                                                    {item.label}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        })
+                                    }
                                 </View>
-
-
                             </ScrollView>
 
 
@@ -159,14 +194,12 @@ const styles = {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: "center",
-        marginBottom: 8
+        paddingBottom: 6
     },
     dropdownHeaderText: {
         fontFamily: platform.fontFamily,
         fontSize: 22,
         lineHeight: 31,
-
-
     },
     text: {
         color: platform.brandFontAccent,
@@ -181,17 +214,18 @@ const styles = {
         borderColor: platform.brandDivider,
     },
     timeButton: {
-        height: 30,
+        height: 26,
         width: 77,
         borderRadius: 8,
         backgroundColor: platform.brandWarning,
         overflow: 'hidden',
-        marginHorizontal: 5
+        marginLeft: 4,
+        marginRight: 3
     },
     timeButtonText: {
         fontFamily: platform.fontFamily,
         fontSize: 20,
-        lineHeight: 29,
+        lineHeight: 26,
         textAlign: 'center'
     },
     timeButtonFill: {

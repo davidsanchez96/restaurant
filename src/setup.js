@@ -7,6 +7,7 @@ import configureStore from './configureStore';
 import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform'
 import * as moment from "moment";
+import {AppLoading} from "expo";
 
 
 
@@ -19,24 +20,27 @@ export default class ChesterWithRedux extends Component {
             isLoading: true,
             store: configureStore(() => {
                 this.setState({isLoading: false});
-
-
             }),
         };
     }
 
 
     render() {
-        return (
-            <StyleProvider style={getTheme(platform)}>
-                <Provider store={this.state.store}>
-                    <Chester isLoading={this.state.isLoading}/>
 
 
-                </Provider>
-            </StyleProvider>
+            return (
+                <StyleProvider style={getTheme(platform)}>
+                    <Provider store={this.state.store}>
+                        <Chester isLoading={this.state.isLoading}/>
 
-        );
+
+                    </Provider>
+                </StyleProvider>
+
+            );
+
+
+
     }
 }
 

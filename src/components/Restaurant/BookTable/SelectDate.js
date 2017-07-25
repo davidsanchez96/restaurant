@@ -7,200 +7,139 @@ import MyModal from "../../Common/MyModal/index";
 import platform from "../../../../native-base-theme/variables/platform";
 import {Picker, TouchableOpacity} from "react-native";
 import moment from "moment";
-
+import 'moment-round'
 
 export default class SelectDate extends React.Component {
 
     state = {
-        days: [],
-        day: 0,
-        hours: [],
-        hour: 0,
-        minutes: [],
-        minute: 0
-
+        count: 2
     };
 
-    timesheet = [
-        {
-            id: "monday",
-            day: 1,
-            name: "Пн",
-            start:39600
-
-        },
-        {
-            id: "tuesday",
-            day: 2,
-            name: "Вт",
-            start:39600
-        },
-        {
-            id: "wednesday",
-            day: 3,
-            name: "Ср",
-            start:39600
-        },
-        {
-            id: "thursday",
-            day: 4,
-            name: "Чт",
-            start:39600
-        },
-        {
-            id: "friday",
-            day: 5,
-            name: "Пт",
-            start:39600
-        },
-        {
-            id: "saturday",
-            day: 6,
-            name: "Сб",
-            periods:[
-
-            ]
-        },
-        {
-            id: "sunday",
-            day: 0,
-            name: "Вс",
-            start:39600,
-            end:86400
-        }
-    ];
-
-
-    constructor() {
+    constructor(props) {
         super();
-        let days = [];
-        let start = 0;
-        let currentHour = parseInt(moment().format('H'));
-        let currentMinute = parseInt(moment().format('m'));
-        if (currentHour === 23 && currentMinute > 45) {
-            start = 1;
-        }
-        for (let i = start; i < 7; i++) {
-            days.push({
-                name: i === 0 ? 'сегодня' : moment().add(i, 'days').format('ddd D MMMM'),
-                date: moment().add(i, 'days').format('L'),
-                value: days.length
-            });
-        }
-        this.state.days = days;
+        this.state.date = props.date;
+        this.state.day = this.state.date.clone().floor(24, 'hours').format();
+        this.state.hour = this.state.date.format();
     }
 
 
     componentWillMount() {
-        let hours = this.updateHours(this.state.days[0]);
-        this.updateMinutes(this.state.days[0], hours[0]);
+
     }
 
-    updateHours(day) {
 
-        let currentHour = parseInt(moment().format('H'));
-        if (day.value === 0) {
+    setDay(date) {
+        date =  moment(date);
+        let selectedHour = parseInt(this.state.date.format('H'));
+        let selectedMinutes = parseInt(this.state.date.format('m'));
+
+        if (date.format('ddd D MMMM') === moment().format('ddd D MMMM')) {
+            let currentHour = parseInt(moment().format('H'));
             let currentMinute = parseInt(moment().format('m'));
-
-            if (currentMinute > 45) {
-                currentHour += 1;
+            if (currentHour > selectedHour || (currentHour === selectedHour && currentMinute > selectedMinutes)) {
+                date = moment().ceil(30, 'minutes');
             }
-        }
-
-        let hours = [];
-        if (day.date === moment().format('L')) {
-            for (let i = currentHour; i < 24; i++) {
-                let name = i > 9 ? i.toString() : '0' + i;
-                hours.push({
-                    name: name,
-                    date: i,
-                    value: hours.length
-                })
+            else {
+                date = date.floor(24, 'hours').add(selectedHour, 'hours').add(selectedMinutes, 'minutes');
             }
         }
         else {
-            for (let i = 0; i < 24; i++) {
-                let name = i > 9 ? i.toString() : '0' + i;
-                hours.push({
-                    name: name,
-                    date: i,
-                    value: i
-                })
-            }
+            date = date.floor(24, 'hours').add(selectedHour, 'hours').add(selectedMinutes, 'minutes');
         }
+
         this.setState({
-            hours: hours,
-            hour: 0
+            day: date.clone().floor(24, 'hours').format(),
+            hour: date.format(),
+            date
         });
-        return hours;
+
 
     }
 
-    updateMinutes(day, hour) {
+    setHour(date) {
+        date = moment(date);
+        this.setState({
+            day: date.clone().floor(24, 'hours').format(),
+            hour: date.format(),
+            date
+        });
+    }
 
 
+    getDays() {
+        let days = [];
+        let start = 0;
         let currentHour = parseInt(moment().format('H'));
         let currentMinute = parseInt(moment().format('m'));
-        if (hour.date === currentHour) {
-
-            if (currentMinute <= 15) {
-                currentMinute = 15;
-            }
-            else if (currentMinute > 15 && currentMinute <= 30) {
-                currentMinute = 30;
-            }
-            else if (currentMinute > 30) {
-                currentMinute = 45;
-            }
+        if (currentHour > 23 || (currentHour === 23 && currentMinute > 30)) {
+            start = 1;
         }
+        for (let i = start; i < 365; i++) {
+            days.push({
+                name: i === 0 ? 'сегодня' : moment().add(i, 'days').format('ddd D MMMM'),
+                date: moment().add(i, 'days').floor(24, 'hours').format(),
+                value: days.length
+            });
+        }
+        return days;
+    }
 
-        let minutes = [];
-        if (day.value === 0 && hour.date === currentHour) {
-            for (let i = currentMinute; i < 60; i += 15) {
-                minutes.push({
-                    name: i.toString(),
-                    date: i,
-                    value: minutes.length
-                })
+    getHours() {
+
+        let date = this.state.date.clone();
+        let currentHour = parseInt(moment().format('H'));
+        let currentMinute = parseInt(moment().format('m'));
+
+        let hours = [];
+        if (date.format('ddd D MMMM') === moment().format('ddd D MMMM')) {
+            let currentDate = date;
+            if(currentHour<9 ||(currentHour===9 &&currentMinute<=30))
+            {
+               currentDate= moment().floor(24, 'hours').add(10, 'hours');
             }
+            else
+            {
+                currentDate=moment().ceil(30, 'minutes');
+            }
+            let end = moment().floor(24, 'hours').add(23, 'hours').add(30, 'minutes');
+            while (currentDate <= end) {
+                currentDate = currentDate.clone().floor(30, 'minutes');
+                hours.push({
+                    name: currentDate.format('HH:mm'),
+                    date: currentDate.format()
+                });
+                currentDate.add(30, 'minutes');
+            }
+
+
         }
         else {
-            for (let i = 0; i < 60; i += 15) {
-                minutes.push({
-                    name: i.toString(),
-                    date: i,
-                    value: minutes.length
-                })
+            let currentDate = date.clone().floor(24, 'hours').add(10, 'hours');
+            let end = date.clone().floor(24, 'hours').add(23, 'hours').add(30, 'minutes');
+            while (currentDate <= end) {
+                currentDate = currentDate.clone();
+                hours.push({
+                    name: currentDate.format('HH:mm'),
+                    date: currentDate.format()
+                });
+                currentDate.add(30, 'minutes');
             }
         }
-
-
-        this.setState({
-            minutes: minutes,
-            minute: currentMinute
-        })
-
+        return hours;
     }
 
-    setDay(day) {
-        this.setState({
-            day
+    selectDate() {
+        
+        this.props.onDateSelected({
+            count: this.state.count,
+            date: this.state.date
         });
-        let hours = this.updateHours(this.state.days[day]);
-        this.updateMinutes(this.state.days[day], hours[0]);
-
-    }
-
-    setHour(hour) {
-        this.setState({
-            hour
-        });
-        this.updateMinutes(this.state.days[this.state.day], this.state.hours[hour]);
+        this.refs.modal.close();
     }
 
 
     render() {
-        return <MyModal style={{height: 240, backgroundColor: "#2B3034"}} isOpen={this.props.isOpen} ref="modal"
+        return <MyModal style={{height: 261, backgroundColor: "#2B3034"}} isOpen={this.props.isOpen} ref="modal"
                         position={'bottom'}
                         onRequestClose={() => this.props.onClose()}>
 
@@ -208,14 +147,15 @@ export default class SelectDate extends React.Component {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 paddingHorizontal: 16,
-                paddingVertical: 10,
+                paddingBottom: 10,
+                paddingTop: 6,
+                borderTopWidth: 1,
                 borderBottomWidth: 1,
                 borderColor: platform.brandDivider
             }}>
 
 
                 <TouchableOpacity
-
                     onPress={() => {
                         this.refs.modal.close();
                     }}
@@ -223,14 +163,20 @@ export default class SelectDate extends React.Component {
                     <Text style={{
                         color: platform.brandWarning,
                         fontSize: 20,
-                        lineHeight: 29
+                        lineHeight: 29,
+                        fontFamily: platform.fontFamily
                     }}>
                         Отмена
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        this.selectDate();
+                    }}
+                >
                     <Text style={{
                         color: platform.brandWarning,
+                        fontFamily: platform.fontFamily,
                         fontSize: 20,
                         lineHeight: 29
                     }}>Готово</Text>
@@ -243,48 +189,35 @@ export default class SelectDate extends React.Component {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     paddingHorizontal: 17,
-                    marginTop: -15,
+
                 }}>
 
 
-                    <Picker style={{width: 70, borderWidth: 0}}
-                            itemStyle={{fontFamily: platform.fontFamily, color: '#fff'}}
+                    <Picker style={{width: 100, borderWidth: 0}}
+                            itemStyle={{fontFamily: platform.fontFamily, color: '#fff',textAlign:'center'}}
                             selectedValue={this.state.count}
                             onValueChange={(itemValue, itemIndex) => this.setState({count: itemValue})}
                     >
-                        <Picker.Item label="1 чел" value="1"/>
-                        <Picker.Item label="2 чел" value="2"/>
-                        <Picker.Item label="3 чел" value="3"/>
-                        <Picker.Item label="4 чел" value="4"/>
-                        <Picker.Item label="5 чел" value="5"/>
-                        <Picker.Item label="6 чел" value="6"/>
+                        {Array.from(new Array(20),(val,index)=>index+1).map((item, i) => {
+                            return <Picker.Item key={i} label={item + " чел"} value={item}/>
+                        })}
                     </Picker>
                     <Picker style={{flex: 1}}
-                            itemStyle={{fontFamily: platform.fontFamily, color: '#fff'}}
+                            itemStyle={{fontFamily: platform.fontFamily, color: '#fff',textAlign:'center'}}
                             selectedValue={this.state.day}
                             onValueChange={(itemValue, itemIndex) => this.setDay(itemValue)}
                     >
-                        {this.state.days.map((item) => {
-                            return <Picker.Item key={item.value} label={item.name} value={item.value}/>
+                        {this.getDays().map((item, i) => {
+                            return <Picker.Item key={i} label={item.name} value={item.date}/>
                         })}
                     </Picker>
-                    <Picker style={{width: 35}}
-                            itemStyle={{fontFamily: platform.fontFamily, color: '#fff'}}
+                    <Picker style={{width: 90}}
+                            itemStyle={{fontFamily: platform.fontFamily, color: '#fff',textAlign:'center'}}
                             selectedValue={this.state.hour}
                             onValueChange={(itemValue, itemIndex) => this.setHour(itemValue)}
                     >
-                        {this.state.hours.map((item) => {
-                            return <Picker.Item key={item.value} label={item.name} value={item.value}/>
-                        })}
-                    </Picker>
-                    <Picker style={{width: 35}}
-                            itemStyle={{fontFamily: platform.fontFamily, color: '#fff'}}
-                            selectedValue={this.state.minute}
-                            onValueChange={(itemValue, itemIndex) => this.setState({minute: itemValue})}
-
-                    >
-                        {this.state.minutes.map((item) => {
-                            return <Picker.Item key={item.value} label={item.name} value={item.value}/>
+                        {this.getHours().map((item, i) => {
+                            return <Picker.Item key={i} label={item.name} value={item.date}/>
                         })}
                     </Picker>
                 </View>
@@ -292,7 +225,7 @@ export default class SelectDate extends React.Component {
                 <View
                     style={{
                         position: 'absolute',
-                        top: 75,
+                        top: 90,
                         left: 17,
                         right: 17,
                         height: 1,
@@ -301,7 +234,7 @@ export default class SelectDate extends React.Component {
                 <View
                     style={{
                         position: 'absolute',
-                        top: 110,
+                        top: 125,
                         left: 17,
                         right: 17,
                         height: 1,

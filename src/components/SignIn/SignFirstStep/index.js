@@ -57,7 +57,7 @@ class SignFirstStep extends React.Component {
                             </View>
 
                             <View style={styles.message}>
-                                <Text style={styles.messageText}>fВведите свой номер телефона, чтобы
+                                <Text style={styles.messageText}>Введите свой номер телефона, чтобы
                                     вступить в
                                     программу
                                     лояльности и получать скидки!

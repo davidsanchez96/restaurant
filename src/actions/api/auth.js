@@ -22,6 +22,7 @@ class AuthServiceImpl {
         if (res.err) throw res.err;
 
         Api.jwt(res.body.token);
+        res.body.phone = phone;
         return res.body;
     }
 
