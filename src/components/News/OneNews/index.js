@@ -5,6 +5,7 @@ import {
 } from 'native-base';
 import {Image, TouchableOpacity} from "react-native";
 import platform from "../../../../native-base-theme/variables/platform";
+import moment from "moment";
 
 export default class OneNews extends React.Component {
 
@@ -20,12 +21,12 @@ export default class OneNews extends React.Component {
                 <View style={{marginHorizontal:16}}>
                     <View style={styles.infoBlock}>
 
-                        <Text style={styles.infoDate}>3 июня</Text>
+                        <Text style={styles.infoDate}>{moment(this.props.data.date).format('D MMM')}</Text>
                         <View style={styles.infoPoint}/>
-                        <Text style={styles.infoName}>Рестобар CHESTER</Text>
+                        <Text style={styles.infoName}>{this.props.data.restaurant}</Text>
                     </View>
                     <Text style={styles.header}>
-                        Открытие летней веранды рестобара
+                        {this.props.data.name}
                     </Text>
                 </View>
 

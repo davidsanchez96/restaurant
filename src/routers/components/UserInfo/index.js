@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image} from "react-native";
+import {Image, TouchableOpacity} from "react-native";
 import {Button, Text, View} from "native-base";
 import platform from "../../../../native-base-theme/variables/platform";
 import {connect} from "react-redux";
@@ -9,6 +9,7 @@ class UserInfo extends React.Component {
 
 
         if (this.props.logged) {
+
 
         }
         else {
@@ -23,7 +24,13 @@ class UserInfo extends React.Component {
                     </View>
                 </View>
 
-                <Text style={styles.bottomAvatarText}>Ваш аккаунт</Text>
+                <TouchableOpacity onPress={() => {
+
+                    this.props.navigation.navigate('Profile')
+                }
+                }>
+                    <Text style={styles.bottomAvatarText}>Ваш аккаунт</Text>
+                </TouchableOpacity>
                 <View>
                     <Button style={styles.button} rounded warning onPress={() => {
                         this.props.signIn()

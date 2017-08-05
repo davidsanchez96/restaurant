@@ -26,13 +26,13 @@ class App extends React.Component {
             Api.jwt(this.props.user.token);
         }
 
-        let restaurants = await this.props.getRestaurants();
+        /*let restaurants = await this.props.getRestaurants();
         if(restaurants.restaurants)
         {
             Object.keys(restaurants.restaurants).forEach((item, i) => {
                 Image.prefetch(restaurants.restaurants[item].photos[0].url);
             });
-        }
+        }*/
 
     }
 

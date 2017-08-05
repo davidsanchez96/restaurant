@@ -9,8 +9,8 @@ import {Image, ScrollView} from "react-native";
 import UserInfo from "./components/UserInfo/index";
 import platform from "../../native-base-theme/variables/platform";
 import ChesterIcon from "../components/Common/ChesterIcon/index";
+import ProfileStack from "./ProfileStack";
 
-import Restaurants from "../components/Restaurant/Restaurants";
 export default NavigationDrawer = DrawerNavigator({
         Restaurant: {
             screen: RestaurantsStack,
@@ -40,6 +40,12 @@ export default NavigationDrawer = DrawerNavigator({
             screen: RestaurantsStack,
             navigationOptions: {
                 title: 'Связаться с нами'
+            }
+        },
+        Profile: {
+            screen: ProfileStack,
+            navigationOptions: {
+                title: 'Ваш профиль'
             }
         },
     },
@@ -86,6 +92,9 @@ class CustomNavigationDrawer extends React.Component {
                                  labelStyle={styles.drawerItemsText}
                                  style={{marginTop: -20}}
                                  inactiveTintColor="#fff"
+                                 items={this.props.items.filter((item) => {
+                                     return item.key !== 'Profile'
+                                 })}
 
                     />
 
@@ -130,8 +139,8 @@ const styles = {
         flex: 1,
         textAlign: 'center',
         fontWeight: "normal",
-        margin:0,
-        marginTop:22
+        margin: 0,
+        marginTop: 22
     },
     scanBarButton: {
         alignSelf: "center",
@@ -144,4 +153,4 @@ const styles = {
     }
 };
 
-const CustomNavigationDrawerSwag = connect(mapStateToProps, bindAction)(CustomNavigationDrawer);
+export const CustomNavigationDrawerSwag = connect(mapStateToProps, bindAction)(CustomNavigationDrawer);

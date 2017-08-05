@@ -11,7 +11,7 @@ export default class App extends React.Component {
     };
 
     render() {
-        if (this.state.appIsReady ) {
+        if (this.state.appIsReady) {
             return (
                 <ChesterWithRedux/>
             );
@@ -38,10 +38,13 @@ export default class App extends React.Component {
                     require('./assets/images/navigation/nav-bg.png'),
                     require('./assets/images/background/background.png'),
                     require('./assets/images/cafe-1.png'),
+                    require('./assets/images/payment/mastercard.png'),
+                    require('./assets/images/payment/visa.png'),
+                    require('./assets/images/payment/apple.png'),
                 ],
                 fonts: [
-                    {  'Lumberjack': require('./assets/fonts/lumberjack.otf') },
-                    {  'Mozzart-sketch': require('./assets/fonts/MozzartSketch/MozzartSketch-ExtraBold.otf') },
+                    {'Lumberjack': require('./assets/fonts/lumberjack.otf')},
+                    {'Mozzart-sketch': require('./assets/fonts/MozzartSketch/MozzartSketch-ExtraBold.otf')},
 
                 ],
             });

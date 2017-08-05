@@ -241,7 +241,7 @@ export default class Menu extends React.Component {
         }
         else {
             if (this.state.results.length > 0) {
-                return (<CategoryList data={this.state.results}/>)
+                return (<CategoryList data={this.state.results} navigation={this.props.navigation}/>)
             }
             else {
                 return <View style={{alignItems: 'center', marginTop: 40}}>

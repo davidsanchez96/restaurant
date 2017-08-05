@@ -37,7 +37,7 @@ export default class Category extends React.Component {
         return (
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
 
-                    <CategoryList data={this.data}/>
+                    <CategoryList data={this.data} navigation={this.props.navigation}/>
 
 
             </Image>

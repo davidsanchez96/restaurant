@@ -5,15 +5,14 @@ import {
 } from 'native-base';
 import {Image, ScrollView, TouchableOpacity} from "react-native";
 import platform from "../../../../native-base-theme/variables/platform";
-import ChesterIcon from "../../Common/ChesterIcon/index";
 import {signStackStyle} from "../../../routers/SignStack";
-import RestaurantLocation from "../common/RestaurantLocation/index";
-import RestaurantContact from "../common/RestaurantContact/index";
 import {connect} from "react-redux";
 import SelectDate from "./SelectDate";
 
 import moment from "moment";
 import 'moment-round'
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Octicons from "@expo/vector-icons/Octicons";
 
 class BookTable extends React.Component {
 
@@ -38,8 +37,7 @@ class BookTable extends React.Component {
                 this.state.date = moment().ceil(30, 'minutes');
             }
         }
-        else
-        {
+        else {
             this.state.date = moment().ceil(24, 'hours').add(10, 'hours');
         }
 
@@ -101,62 +99,51 @@ class BookTable extends React.Component {
 
                     <Container >
                         <Content>
-                            <View style={{paddingHorizontal: 16, marginBottom: 11}}>
+                            <View style={{paddingHorizontal: 16, marginBottom: 20}}>
                                 <Text style={styles.header}>
 
                                     Бронирование стола
 
                                 </Text>
-                                <Text style={styles.text}>
-                                    Забронируйте столик на удобное вам время
+                                <Text style={styles.restaurantName}>
+                                    {restaurant.title_full}
                                 </Text>
 
                             </View>
                             <TouchableOpacity onPress={() => {
                                 this.setModalVisible(true)
                             }}>
-                                <View style={styles.dropdownHeader}>
+                                <View style={styles.selectDate}>
 
-
-                                    <Text style={styles.dropdownHeaderText}>{this.getCurrentSelection()}</Text>
-
-                                    <ChesterIcon name="arrow-down-orange-12" size={8}
-                                                 color={platform.brandFontAccent}
-                                                 style={styles.scheduleIcon}/>
+                                    <Octicons name="calendar" size={14}
+                                              color={'#fff'}
+                                              style={styles.selectDateIcon}/>
+                                    <Text style={styles.selectDateText}>{this.getCurrentSelection()}</Text>
 
 
                                 </View>
                             </TouchableOpacity>
 
-                            <ScrollView horizontal style={styles.timeSheet}>
-                                <View style={{flexDirection: 'row'}}>
-                                    {
-                                        this.getCurrentSelectionTabs().map((item, i) => {
-                                            return <TouchableOpacity style={styles.timeButton} key={i} onPress={() => {
-                                                this.props.navigation.navigate('BookTableConfirm')
-                                            }}>
-                                                <Text style={styles.timeButtonText}>
-                                                    {item.label}
-                                                </Text>
-                                            </TouchableOpacity>
-                                        })
-                                    }
-                                </View>
-                            </ScrollView>
-
-
-                            <View style={{paddingHorizontal: 16}}>
-                                <Text style={{...styles.header, marginBottom: 0, marginTop: 19}}>
-                                    Рестобар Chester
-                                </Text>
-                                <RestaurantLocation
-                                    restaurant={restaurant}/>
+                            <View style={styles.timeSheet}>
+                                <Text style={styles.timeSheetHint}>Забронируйте столик на удобное вам время:</Text>
+                                <ScrollView horizontal style={{paddingBottom:22,paddingTop:14}}>
+                                    <View style={{flexDirection: 'row'}}>
+                                        {
+                                            this.getCurrentSelectionTabs().map((item, i) => {
+                                                return <TouchableOpacity style={styles.timeButton} key={i}
+                                                                         onPress={() => {
+                                                                             this.props.navigation.navigate('BookTableConfirm')
+                                                                         }}>
+                                                    <Text style={styles.timeButtonText}>
+                                                        {item.label}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            })
+                                        }
+                                    </View>
+                                </ScrollView>
                             </View>
 
-
-                            <View style={{marginTop: 15}}>
-                                <RestaurantContact restaurant={restaurant}/>
-                            </View>
 
                         </Content>
                     </Container>
@@ -186,20 +173,30 @@ const styles = {
         fontFamily: platform.fontFamily,
         fontSize: 28,
         lineHeight: 40,
-        marginBottom: 7,
         marginTop: 15,
     },
-    dropdownHeader: {
-        paddingHorizontal: 16,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: "center",
-        paddingBottom: 6
+    restaurantName: {
+        fontSize: 20,
+        lineHeight: 29,
     },
-    dropdownHeaderText: {
+    selectDate: {
+        height: 36,
+        marginHorizontal: 8,
+        marginBottom: 19,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+        backgroundColor: '#4A545B',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    selectDateIcon: {
+        paddingRight: 8
+
+    },
+    selectDateText: {
         fontFamily: platform.fontFamily,
-        fontSize: 22,
-        lineHeight: 31,
+        fontSize: 16,
+        lineHeight: 23,
     },
     text: {
         color: platform.brandFontAccent,
@@ -208,13 +205,18 @@ const styles = {
         lineHeight: 20
     },
     timeSheet: {
-        paddingVertical: 15,
+        paddingTop: 13,
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderColor: platform.brandDivider,
     },
+    timeSheetHint:{
+        fontSize: 14,
+        lineHeight: 20,
+        paddingHorizontal:16
+    },
     timeButton: {
-        height: 26,
+        height: 32,
         width: 77,
         borderRadius: 8,
         backgroundColor: platform.brandWarning,
@@ -225,11 +227,11 @@ const styles = {
     timeButtonText: {
         fontFamily: platform.fontFamily,
         fontSize: 20,
-        lineHeight: 26,
+        lineHeight: 29,
         textAlign: 'center'
     },
     timeButtonFill: {
-        height: 30,
+        height: 32,
         width: 77,
         borderRadius: 8,
         overflow: 'hidden',
