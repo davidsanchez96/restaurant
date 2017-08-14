@@ -12,13 +12,14 @@ import SelectDate from "./SelectDate";
 import moment from "moment";
 import 'moment-round'
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Octicons from "@expo/vector-icons/Octicons";
+
 
 class BookTable extends React.Component {
 
 
     state = {
-        isOpen: false
+        isOpen: false,
+        count:2
     };
 
     constructor() {
@@ -46,19 +47,6 @@ class BookTable extends React.Component {
     }
 
 
-    getCurrentSelection() {
-        let dateFormatted = '';
-        dateFormatted += this.state.count + ' ' + (this.state.count === 1 || this.state.count >= 5 ? 'человек' : 'человека');
-        dateFormatted += ', ';
-        if (this.state.date.day() === moment().day()) {
-            dateFormatted += 'сегодня, ' + this.state.date.format('HH:mm');
-        }
-        else {
-            dateFormatted += this.state.date.format('ddd D MMMM, HH:mm');
-        }
-        return dateFormatted;
-    }
-
     getCurrentSelectionTabs() {
         let startDate = this.state.date.clone().add(-30, 'minutes');
         let result = [];
@@ -72,9 +60,6 @@ class BookTable extends React.Component {
         return result;
     }
 
-    setModalVisible(visible) {
-        this.setState({isOpen: visible});
-    }
 
     render() {
 
@@ -86,15 +71,6 @@ class BookTable extends React.Component {
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
 
                 <View style={styles.container}>
-
-                    <SelectDate isOpen={this.state.isOpen}
-                                date={this.state.date}
-                                onDateSelected={(selected) => {
-                                    this.setState({date: selected.date, count: selected.count});
-                                }}
-                                onClose={() => {
-                                    this.setState({isOpen: false});
-                                }}/>
 
 
                     <Container >
@@ -110,23 +86,17 @@ class BookTable extends React.Component {
                                 </Text>
 
                             </View>
-                            <TouchableOpacity onPress={() => {
-                                this.setModalVisible(true)
-                            }}>
-                                <View style={styles.selectDate}>
 
-                                    <Octicons name="calendar" size={14}
-                                              color={'#fff'}
-                                              style={styles.selectDateIcon}/>
-                                    <Text style={styles.selectDateText}>{this.getCurrentSelection()}</Text>
-
-
-                                </View>
-                            </TouchableOpacity>
+                            <SelectDate
+                                date={this.state.date}
+                                count={this.state.count}
+                                onDateSelected={(selected) => {
+                                    this.setState({date: selected.date, count: selected.count});
+                                }}/>
 
                             <View style={styles.timeSheet}>
                                 <Text style={styles.timeSheetHint}>Забронируйте столик на удобное вам время:</Text>
-                                <ScrollView horizontal style={{paddingBottom:22,paddingTop:14}}>
+                                <ScrollView horizontal style={{paddingBottom: 22, paddingTop: 14}}>
                                     <View style={{flexDirection: 'row'}}>
                                         {
                                             this.getCurrentSelectionTabs().map((item, i) => {
@@ -179,25 +149,7 @@ const styles = {
         fontSize: 20,
         lineHeight: 29,
     },
-    selectDate: {
-        height: 36,
-        marginHorizontal: 8,
-        marginBottom: 19,
-        paddingHorizontal: 10,
-        borderRadius: 5,
-        backgroundColor: '#4A545B',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    selectDateIcon: {
-        paddingRight: 8
 
-    },
-    selectDateText: {
-        fontFamily: platform.fontFamily,
-        fontSize: 16,
-        lineHeight: 23,
-    },
     text: {
         color: platform.brandFontAccent,
         fontFamily: platform.fontFamily,
@@ -206,14 +158,15 @@ const styles = {
     },
     timeSheet: {
         paddingTop: 13,
+        marginTop:19,
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderColor: platform.brandDivider,
     },
-    timeSheetHint:{
+    timeSheetHint: {
         fontSize: 14,
         lineHeight: 20,
-        paddingHorizontal:16
+        paddingHorizontal: 16
     },
     timeButton: {
         height: 32,

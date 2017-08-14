@@ -1,6 +1,7 @@
 import React from 'react';
 import {StackNavigator} from 'react-navigation';
 import Profile from "../components/Profile/Profile";
+import AddCard from "../components/Profile/AddCard";
 import DrawerIcon from './components/DrawerIcon'
 import {BaseNavigationBarStyle} from "./BaseNavigationBarStyle";
 
@@ -13,11 +14,20 @@ export default ProfileStack = StackNavigator({
             headerLeft: <DrawerIcon {...props} />
 
         })
+    },
+    AddCard: {
+        screen: AddCard,
+
+        navigationOptions: props => ({
+            title: 'Добавление карты',
+            headerBackTitleStyle: {
+                color: "transparent"
+            },
+        })
     }
 }, {
     navigationOptions: props => ({
-        ...BaseNavigationBarStyle,
-        headerRight: <BasketIcon {...props} />
+        ...BaseNavigationBarStyle
     }),
     cardStyle: {
         backgroundColor: 'transparent',

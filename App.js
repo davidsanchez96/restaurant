@@ -41,11 +41,14 @@ export default class App extends React.Component {
                     require('./assets/images/payment/mastercard.png'),
                     require('./assets/images/payment/visa.png'),
                     require('./assets/images/payment/apple.png'),
+                    require('./assets/images/payment/credit-card.png'),
+                    require('./assets/images/payment/credit-card-cvv.png'),
+                    require('./assets/images/payment/credit-card-date.png'),
                 ],
                 fonts: [
                     {'Lumberjack': require('./assets/fonts/lumberjack.otf')},
                     {'Mozzart-sketch': require('./assets/fonts/MozzartSketch/MozzartSketch-ExtraBold.otf')},
-
+                    {'Roboto_medium': require('./assets/fonts/lumberjack.otf')},
                 ],
             });
         } catch (e) {

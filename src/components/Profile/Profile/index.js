@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-    Body, Button, Card, CardItem, Container, Content, Icon, Left, List, ListItem, Picker, Right, Switch, Text,
-    View
-} from 'native-base';
-import {Image, TouchableOpacity, Dimensions, ScrollView, ListView} from "react-native";
+import {Button, Icon, Left, List, ListItem, Picker, Right, Switch, Text, View} from 'native-base';
+import {Image, TouchableOpacity, ScrollView, Alert} from "react-native";
 import platform from "../../../../native-base-theme/variables/platform";
 
 import UserInfo from "../../../routers/components/UserInfo/index";
@@ -15,7 +12,8 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import Swipeout from "react-native-swipeout";
 import ChesterIcon from "../../Common/ChesterIcon/index";
 import MyModal from "../../Common/MyModal/index";
-
+import {Platform} from "react-native";
+const currentPlatform = Platform.OS;
 
 class Profile extends React.Component {
 
@@ -31,6 +29,18 @@ class Profile extends React.Component {
 
     componentWillUnmount() {
 
+    }
+
+
+    changePhone() {
+        Alert.alert(
+            'Смена номера',
+            'Изменение привяжет профиль вместе с платежной информацией, историей заказов и списком адресов к новому номеру телефона.',
+            [
+                {text: 'Отменить', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ]
+        )
     }
 
     render() {
@@ -62,8 +72,7 @@ class Profile extends React.Component {
                         borderTopWidth: 1,
                         borderColor: platform.brandDivider,
                         marginTop: 15
-                    }
-                    }>
+                    }}>
 
                         <View style={InputBlockStyles.inputBlock}>
                             <Text style={InputBlockStyles.inputLabel}>Телефон</Text>
@@ -82,7 +91,11 @@ class Profile extends React.Component {
                                     this.changeNumber(text)
                                 }}
                             />
-
+                            <TouchableOpacity style={{paddingVertical: 16}} onPress={() => {
+                                this.changePhone();
+                            }}>
+                                <ChesterIcon name={'edit-16'} size={16} color={platform.brandWarning}/>
+                            </TouchableOpacity>
                         </View>
 
                     </View>
@@ -99,7 +112,7 @@ class Profile extends React.Component {
                             <View style={{paddingVertical: 16}}>
                                 <Switch value={this.state.push} onValueChange={(push) => {
                                     this.setState({push})
-                                }} onTintColor={platform.brandWarning}/>
+                                }} onTintColor={currentPlatform === 'ios' ? platform.brandWarning : ''}/>
                             </View>
 
                         </View>
@@ -126,45 +139,26 @@ class Profile extends React.Component {
 
             <MyModal style={{height: 215, backgroundColor: "#7A8187"}} isOpen={this.state.isRemoveOpen} ref="modal"
                      position={'bottom'}
-                     onRequestClose={() => this.onClose()}>
-                <View>
-                    <View>
-                        <Text>Удаление карты</Text>
-                        <Text>Вы действительно хотите удалить карту?</Text>
-                    </View>
-
-                    <View>
-                        <Button bordered rounded light>
-                            <Text>Отмена</Text>
-                        </Button>
-                        <Button danger rounded>
-                            <Text>Удалить</Text>
-                        </Button>
-                    </View>
-
-                </View>
-
-            </MyModal>
-
-
-            <MyModal style={{height: 215, backgroundColor: "#7A8187"}} isOpen={this.state.isRemoveOpen} ref="modal"
-                     position={'bottom'}
-                     onRequestClose={() => this.onClose()}>
-                <View >
-                    <View style={styles.removeCard.hintRow}>
-                        <View style={styles.removeCard.textRow}>
-                            <Text style={styles.removeCard.removeText}>Удаление карты</Text>
-                            <Text style={styles.removeCard.removeTextQuestion}>Вы действительно хотите удалить карту?</Text>
+                     onRequestClose={() => this.setState({isRemoveOpen: false})}>
+                <View style={modalCardStyles.modal}>
+                    <View style={modalCardStyles.hintRow}>
+                        <View style={modalCardStyles.textRow}>
+                            <Text style={modalCardStyles.removeText}>Удаление карты</Text>
+                            <Text style={modalCardStyles.removeTextQuestion}>Вы действительно хотите удалить
+                                карту?</Text>
                         </View>
-                        <Image source={require(`../../../../assets/images/payment/visa.png`)}/>
+                        <Image source={require(`../../../../assets/images/payment/credit-card.png`)}/>
                     </View>
 
-                    <View style={styles.removeCard.buttonRow}>
-                        <Button bordered rounded light style={styles.removeCard.cancelButton}>
-                            <Text>Отмена</Text>
+                    <View style={modalCardStyles.buttonRow}>
+                        <Button bordered rounded light style={modalCardStyles.cancelButton} onPress={() => {
+                            this.setState({isRemoveOpen: false})
+                        }
+                        }>
+                            <Text uppercase={false} style={modalCardStyles.buttonText}>Отмена</Text>
                         </Button>
-                        <Button danger rounded style={styles.removeCard.removeButton}>
-                            <Text>Удалить</Text>
+                        <Button danger rounded style={modalCardStyles.removeButton}>
+                            <Text uppercase={false} style={modalCardStyles.buttonText}>Удалить</Text>
                         </Button>
                     </View>
 
@@ -207,7 +201,7 @@ class Profile extends React.Component {
                                                 this.setState({removeCard: card, isRemoveOpen: true})
                                             }}
                         >
-                            <Text style={styles.swipeButtonText}>Удалить</Text>
+                            <Text style={styles.swipeButtonText} uppercase={false}>Удалить</Text>
                         </Button>),
                         underlayColor: '#9b4f47'
                     }
@@ -217,7 +211,9 @@ class Profile extends React.Component {
                     swipeoutBtns.push(
                         {
                             width: 88,
-                            component: <Button warning style={styles.swipeButton}><Text style={styles.swipeButtonText}>Сделать
+                            component: <Button warning style={styles.swipeButton}><Text style={styles.swipeButtonText}
+                                                                                        numberOfLines={2}
+                                                                                        uppercase={false}>Сделать
                                 основной</Text></Button>,
                             underlayColor: 'transparent'
                         })
@@ -240,7 +236,8 @@ class Profile extends React.Component {
 
 
                 return <View key={card.type}>
-                    <Swipeout backgroundColor={'#2B3034'} right={swipeoutBtns} buttonWidth={88}>
+                    <Swipeout backgroundColor={'#2B3034'} right={swipeoutBtns} buttonWidth={88} sensitivity={70}
+                              autoClose={true} scroll={() => true}>
                         <View style={styles.cardListItem}>
                             <View style={styles.cardListItemImage}>
                                 <Image source={source} style={{}}/>
@@ -259,7 +256,10 @@ class Profile extends React.Component {
                 </View>
             })}
 
-            <TouchableOpacity style={styles.cardListItem}>
+            <TouchableOpacity style={styles.cardListItem} onPress={() => {
+                this.props.navigation.navigate('AddCard')
+            }
+            }>
                 <View style={styles.cardListItemImage}>
                     <ChesterIcon name="plus-24" size={22} color={"#fff"}/>
                 </View>
@@ -328,5 +328,61 @@ const styles = {
         fontSize: 14,
         lineHeight: 20,
         textAlign: 'center'
+    }
+};
+
+export const modalCardStyles = {
+    modal: {
+        paddingTop: 16,
+        paddingHorizontal: 16,
+        paddingBottom: 30
+    },
+    hintRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 37
+    },
+    textRow: {},
+    removeText: {
+        fontSize: 28,
+        lineHeight: 40,
+        color: '#ffffff',
+        fontFamily: platform.fontFamily
+    },
+    removeTextQuestion: {
+        fontSize: 14,
+        lineHeight: 20,
+        color: '#ffffff',
+        maxWidth: 211,
+        fontFamily: platform.fontFamily
+    },
+
+    buttonRow: {
+        flexDirection: 'row'
+    },
+    cancelButton: {
+        flex: 1,
+        marginRight: 14,
+        height: 48,
+        alignItems: 'center',
+        borderRadius:24
+    },
+    buttonText: {
+        fontSize: 22,
+        lineHeight: 31,
+        textAlign: 'center',
+        flex: 1,
+        fontFamily: platform.fontFamily
+    },
+    removeButton: {
+        flex: 1,
+        height: 48,
+        justifyContent: 'center'
+    },
+    okButton: {
+        flex: 1,
+        height: 48,
+        justifyContent: 'center'
     }
 };

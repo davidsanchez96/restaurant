@@ -1,6 +1,9 @@
+/*
+ * @flow
+ */
 import React from 'react';
 import {Body, Button, Card, CardItem, Container, Content, Icon, Left, Right, Text, View} from 'native-base';
-import {FlatList, Image, TouchableOpacity, Animated, TouchableWithoutFeedback} from "react-native";
+import {FlatList, Image, TouchableOpacity, Animated, TouchableWithoutFeedback, Dimensions} from "react-native";
 import platform from "../../../../native-base-theme/variables/platform";
 import ChesterIcon from "../../Common/ChesterIcon/index";
 import {signStackStyle} from "../../../routers/SignStack";
@@ -10,11 +13,21 @@ import RestaurantContact from "../common/RestaurantContact/index";
 
 export default class CategoryList extends React.Component {
 
-
+    props: {
+        basket?: boolean
+    };
     state = {
         selected: {},
         active: null,
     };
+
+    componentWillMount() {
+
+        for (let dish of  this.props.data) {
+            dish.fadeAnim = new Animated.Value(0);
+        }
+
+    }
 
     reset() {
         if (this.state.active !== null) {
@@ -125,14 +138,22 @@ export default class CategoryList extends React.Component {
 
                 <View style={styles.info}>
                     <TouchableOpacity style={styles.infoTouch} onPress={() => {
-                        this.props.navigation.navigate('Dish', {name: item.name})
+                        this.props.navigation.navigate('Dish', {name: item.title, dish: item})
                     }}>
 
 
-                        <Image source={require('../../../../assets/images/cafe-1.png')} style={styles.image}/>
+                        <View style={styles.infoImageBlock}>
+                            <Image source={{uri: item.photos.thumb}} style={styles.image}/>
+                            {item.available_for_bonus === 1 && <View style={styles.infoBonusBlock}>
+
+                                <Text style={styles.infoBonusText}>За баллы</Text>
+
+                            </View>}
+                        </View>
+
                         <View style={styles.infoBlockText}>
-                            <Text style={styles.infoText}>{item.name}</Text>
-                            <Text style={styles.weight}>{item.weight + "г"}</Text>
+                            <Text style={styles.infoText}>{item.title}</Text>
+                            <Text style={styles.weight}>{item.weight}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -148,7 +169,23 @@ export default class CategoryList extends React.Component {
     };
 
     renderButton(item) {
+        if (this.props.basket) {
+            return this.renderBasketButton(item);
+        }
+        else {
+            return this.renderCategoryButton(item);
+        }
+    }
 
+    renderBasketButton(item) {
+        return (  <Button bordered warning rounded style={styles.addItemButton} onPress={() => {
+            this.props.navigation.navigate('Dish', {name: item.name})
+        }}>
+            <Text style={styles.addItemButtonText}>{item.count + ' ' + 'X' + ' ' + item.price + " ₽"}</Text>
+        </Button>        )
+    }
+
+    renderCategoryButton(item) {
         if (item.id === this.state.active && this.state.selected[item.id] > 0) {
             return (
                 <View style={styles.changeCountItemButton}>
@@ -206,10 +243,13 @@ export default class CategoryList extends React.Component {
 
     }
 
+    componentWillReceiveProps(nextProps) {
+
+    }
 
     render() {
 
-        let k = this.props.data;
+
         return (
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
                 <TouchableWithoutFeedback onPress={() => this.reset()}>
@@ -243,11 +283,12 @@ const styles = {
         borderBottomWidth: 1,
         alignItems: 'center',
         paddingHorizontal: 16,
-        height: 100
+        height: 100,
+
     },
     info: {
-        flexDirection: "row",
-        alignItems: 'center'
+        justifyContent: 'center',
+        width: Dimensions.get('window').width - 140
     },
     infoTouch: {
         flexDirection: "row",
@@ -269,11 +310,30 @@ const styles = {
         color: platform.brandWarning
 
     },
-
+    infoImageBlock: {},
     image: {
         width: 70,
         height: 70,
-        borderRadius: 40
+        borderRadius: 35
+    },
+    infoBonusBlock: {
+        position: 'absolute',
+        bottom: 0,
+
+        left: 6,
+        overflow: 'hidden',
+        height: 17,
+        width: 57,
+        borderWidth: 2,
+        borderColor: '#2B3034',
+        borderRadius: 100,
+        backgroundColor: '#6FB423',
+        justifyContent: 'center'
+    },
+    infoBonusText: {
+        fontFamily: platform.fontFamily,
+        fontSize: 10,
+        textAlign: "center"
     },
     addItemButton: {
         height: 28,

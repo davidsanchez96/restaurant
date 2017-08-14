@@ -7,18 +7,28 @@ class NewsServiceImpl {
 
 
     async getNews(restaurantId) {
+        let res =null;
 
-        /* let res = await this.Api.get(`/restaurant/combined`,{
-         body:{
-         restaurantId
-         }
-         });
-         if (res.err) throw res.err;
+        if (restaurantId) {
+            res = await this.Api.get('/news/combined',{
+                body:{
+                    restaurantId
+                }
+            });
+        }
+        else
+        {
+            res = await this.Api.get('/news/combined');
+        }
 
-         return res.body;*/
 
 
-        function delay(ms) {
+        if (res.err) throw res.err;
+
+        return res.body;
+
+
+        /*function delay(ms) {
             return new Promise((resolve, reject) => {
                 setTimeout(resolve, ms);
             });
@@ -33,25 +43,25 @@ class NewsServiceImpl {
                         name: 'Открытие летней веранда рестобара',
                         description: 'Описание',
                         date: moment(),
-                        restaurant:'Рестобар Chester'
+                        restaurant: 'Рестобар Chester'
                     },
                     {
                         id: 2,
                         name: 'Открытие летней веранда рестобара',
                         description: 'Описание 2',
                         date: moment().add(-1, 'days'),
-                        restaurant:'Рестобар Chester'
+                        restaurant: 'Рестобар Chester'
                     },
                     {
                         id: 3,
                         name: 'Открытие летней веранда рестобара',
                         description: 'Описание 3',
                         date: moment().add(-2, 'days'),
-                        restaurant:'Рестобар Chester'
+                        restaurant: 'Рестобар Chester'
                     }
                 ]
             }
-        });
+        });*/
     }
 
 }

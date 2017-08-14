@@ -21,12 +21,12 @@ export default class OneNews extends React.Component {
                 <View style={{marginHorizontal:16}}>
                     <View style={styles.infoBlock}>
 
-                        <Text style={styles.infoDate}>{moment(this.props.data.date).format('D MMM')}</Text>
+                        <Text style={styles.infoDate}>{moment(this.props.data.event_date).format('D MMM')}</Text>
                         <View style={styles.infoPoint}/>
-                        <Text style={styles.infoName}>{this.props.data.restaurant}</Text>
+                        <Text style={styles.infoName}>{this.props.restaurant.title_short}</Text>
                     </View>
                     <Text style={styles.header}>
-                        {this.props.data.name}
+                        {this.props.data.title}
                     </Text>
                 </View>
 

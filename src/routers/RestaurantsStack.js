@@ -8,13 +8,17 @@ import Category from "../components/Restaurant/Category/index";
 import Dish from "../components/Restaurant/Dish/index";
 import BookTableConfirm from "../components/Restaurant/BookTableConfirm/index";
 import BasketIcon from "./components/BasketIcon/index";
+import BasketPage from "../components/Basket/BasketPage";
+import OrderPage from "../components/Basket/OrderPage";
+import CloseIcon from "./components/CloseIcon/index";
+import {View} from "native-base";
+
 export default RestaurantsStack = StackNavigator({
     Restaurants: {
         screen: Restaurants,
         navigationOptions: props => ({
             title: 'CHESTER',
             headerLeft: <DrawerIcon {...props} />
-
         })
     },
     Restaurant: {
@@ -24,8 +28,6 @@ export default RestaurantsStack = StackNavigator({
             headerBackTitleStyle: {
                 color: "transparent"
             },
-
-
             headerStyle: {
                 ...BaseNavigationBarStyle.headerStyle,
                 shadowOffset: {width: 0, height: 0},
@@ -34,7 +36,7 @@ export default RestaurantsStack = StackNavigator({
                 elevation: 0,
                 borderBottomWidth: 0,
                 borderWidth: 0,
-                zIndex:0
+                zIndex: 0
             }
         }
     },
@@ -44,10 +46,12 @@ export default RestaurantsStack = StackNavigator({
             headerBackTitleStyle: {
                 color: "transparent"
             },
-
-
             headerStyle: {
                 ...BaseNavigationBarStyle.headerStyle
+            },
+            headerTitleStyle : {
+                ...BaseNavigationBarStyle.headerTitleStyle,
+                marginHorizontal:0
             }
         }
     },
@@ -57,29 +61,54 @@ export default RestaurantsStack = StackNavigator({
             headerBackTitleStyle: {
                 color: "transparent"
             },
-
-
             headerStyle: {
                 ...BaseNavigationBarStyle.headerStyle,
                 shadowOffset: {width: 0, height: 0},
                 shadowOpacity: 0,
                 shadowRadius: 0
+            },
+            headerTitleStyle : {
+                ...BaseNavigationBarStyle.headerTitleStyle,
+                marginHorizontal:0
             }
         }
     },
     BookTableConfirm: {
         screen: BookTableConfirm,
-        navigationOptions: {
+        navigationOptions: props => ({
             title: 'Подтверждение',
             headerBackTitleStyle: {
                 color: "transparent"
             },
 
-
+            headerLeft: <CloseIcon {...props} />,
+            headerRight: <View></View>,
             headerStyle: BaseNavigationBarStyle.headerStyle,
 
-        }
+        })
     },
+    Basket: {
+        screen: BasketPage,
+        navigationOptions: props => ({
+            title: 'Корзина',
+            headerLeft: <CloseIcon {...props} />,
+            headerRight: <View></View>
+        })
+    },
+    Order: {
+        screen: OrderPage,
+        navigationOptions: props => ({
+            title: 'Оформление заказа',
+            headerBackTitleStyle: {
+                color: "transparent"
+            },
+            headerRight: <View></View>,
+            headerTitleStyle : {
+                ...BaseNavigationBarStyle.headerTitleStyle,
+                marginHorizontal:0
+            }
+        })
+    }
 }, {
     navigationOptions: props => ({
         ...BaseNavigationBarStyle,

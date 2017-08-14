@@ -16,18 +16,17 @@ class News extends React.Component {
     state = {};
 
     componentWillMount() {
-        this.props.getNews();
+        let key = this.props.navigation.state.params && this.props.navigation.state.params.key;
+        this.props.getNews(key);
     }
 
     _onRefresh = () => {
-        this.props.getNews();
+        let key = this.props.navigation.state.params && this.props.navigation.state.params.key;
+        this.props.getNews(key);
     };
 
     render() {
-
-        let news = [
-            {name: 'Открытие'}
-        ];
+        let restaurant = this.props.restaurants[this.props.navigation.state.params.key];
         return (
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
 
@@ -42,7 +41,7 @@ class News extends React.Component {
                         }}
                         data={this.props.news}
                         renderItem={(rowData) => <View style={{marginBottom: 25}}>
-                            <OneNews data={rowData.item}/>
+                            <OneNews data={rowData.item} restaurant={restaurant}/>
                         </View>}
                         extraData={this.state}
                         keyExtractor={item => item.id}
@@ -70,7 +69,9 @@ function bindAction(dispatch) {
         }
     };
 }
+
 const mapStateToProps = state => ({
+    restaurants: state.restaurant.restaurants,
     news: state.news.news,
     isPending: state.news.getNewsPending
 });

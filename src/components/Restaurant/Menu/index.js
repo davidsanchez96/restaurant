@@ -10,38 +10,9 @@ import {signStackStyle} from "../../../routers/SignStack";
 import Collapsible from 'react-native-collapsible';
 import SearchInput from "../common/SearchInput/index";
 import CategoryList from "../Category/CategoryList";
+import {connect} from "react-redux";
 
-
-const SECTIONS = [
-    {
-        title: 'Мясо'
-    },
-    {
-        title: 'Салаты'
-    },
-    {
-        title: 'Гарниры'
-
-    },
-    {
-        title: 'Десерты'
-    },
-    {
-        title: 'Бар',
-        items: [
-            {
-                title: 'Апперитивы и биттеры'
-            },
-            {
-                title: 'Игристые вина'
-            },
-            {
-                title: 'Вина белые'
-            }
-        ]
-    }
-];
-export default class Menu extends React.Component {
+class Menu extends React.Component {
 
     state = {
         activeSection: null,
@@ -69,25 +40,20 @@ export default class Menu extends React.Component {
         return (
             <View>
                 <TouchableOpacity
-
-
                     style={styles.listItem}
                     onPress={() => {
-
-
                         if (category) {
                             this.changeState(section.title)
                         }
                         else {
-                            this.props.navigation.navigate('Category', {name: section.title})
+                            this.props.navigation.navigate('Category', {
+                                id: section.id,
+                                name: section.title,
+                                restaurant: this.props.restaurants[this.props.navigation.state.params.key]
+                            })
                         }
-
-
                     }}>
-
-
                     <Text style={styles.listItemText}>{section.title}</Text>
-
                     <View>
                         {
                             this.state.activeSection === section.title ?
@@ -103,25 +69,24 @@ export default class Menu extends React.Component {
     _renderContent(section) {
 
         return (
-            <List dataArray={section.items}
+            <List dataArray={section.categories}
                   renderRow={(item) =>
                       <View>
                           <TouchableOpacity
-
-
                               style={styles.subListItem}
                               onPress={() => {
 
-                                  this.props.navigation.navigate('Category', {name: item.title})
+                                  this.props.navigation.navigate('Category', {
+                                      id: item.id,
+                                      name: item.title,
+                                      restaurant: this.props.restaurants[this.props.navigation.state.params.key]
+                                  })
 
                               }}>
-
                               <View style={styles.subListItemBody}>
                                   <ChesterIcon size={6} name="bullet" color={platform.brandDivider}/>
                                   <Text style={styles.subListItemText}>{item.title}</Text>
                               </View>
-
-
                               <View>
                                   <Icon style={styles.subListItemIcon} name="arrow-forward"/>
                               </View>
@@ -134,45 +99,31 @@ export default class Menu extends React.Component {
     }
 
 
+    getAllDish() {
+        this.props.restaurants[this.props.navigation.state.params.key].menu.categories
+            .reduce((a, b) => {
+                let items = [];
+                if (b.categories) {
+                    items = b.categories.reduce((a, subCategory) => {
+                        return a.concat(subCategory.items);
+                    }, [])
+                } else {
+                    items = b.items;
+                }
+                return a.concat(items);
+            }, []);
+    }
+
     onStartSearch(text) {
-      
-        let fake = [
-            {
-                name: "Салат греческий",
-                id: 12,
-                weight: 280,
-                price: 240,
-                fadeAnim: new Animated.Value(0),
-            }, {
-                name: "Руккола с беконом",
-                id: 14,
-                weight: 320,
-                price: 340,
-                fadeAnim: new Animated.Value(0),
-            },
-            {
-                name: "Салат из баклажанов", id: 16, weight: 280, price: 300,
-                fadeAnim: new Animated.Value(0),
-            },
-            {
-                name: "Салат греческий",
-                id: 119,
-                weight: 280,
-                price: 240,
-                fadeAnim: new Animated.Value(0),
-            }, {
-                name: "Руккола с беконом",
-                id: 20,
-                weight: 320,
-                price: 340,
-                fadeAnim: new Animated.Value(0),
-            },
-            {
-                name: "Салат из баклажанов", id: 21, weight: 280, price: 300,
-                fadeAnim: new Animated.Value(0),
-            }
-        ];
         if (text.length > 0) {
+            let result = [];
+            if (this.state.results) {
+                result = this.state.results;
+            }
+            else {
+                result = this.getAllDish();
+            }
+            result = result.filter((dish) => dish.title.includes(text));
 
             this.setState({
                 text: text,
@@ -190,24 +141,17 @@ export default class Menu extends React.Component {
 
     render() {
 
+
         return (
 
             <View style={styles.container}>
-
-
                 <Container style={{flex: 1}}>
                     <Content keyboardShouldPersistTaps="always" style={{flex: 1, minHeight: '100%'}}>
-
-
                         <SearchInput onChangeText={(text) => {
 
                             this.onStartSearch(text)
                         }}/>
-
-
                         {this._renderList()}
-
-
                     </Content>
                 </Container>
             </View>
@@ -218,9 +162,11 @@ export default class Menu extends React.Component {
 
     _renderList() {
 
+        let categories = this.props.restaurants[this.props.navigation.state.params.key].menu.categories;
+
         if (!this.state.results) {
-            return SECTIONS.map((item, i) => {
-                if (item.items) {
+            return categories.map((item, i) => {
+                if (item.categories) {
                     return (
                         <View key={i}>
                             {this._renderHeader(item, true)}
@@ -250,14 +196,13 @@ export default class Menu extends React.Component {
                         <Text style={{
                             fontSize: 22,
                             lineHeight: 33,
-                            textAlign:'center'
+                            textAlign: 'center'
                         }}>Не найдено</Text>
                         <Text style={{
                             fontSize: 16,
                             lineHeight: 24,
-                            textAlign:'center'
+                            textAlign: 'center'
                         }}>Поиск «{this.state.text}» не дал результатов. Попытайтесь задать что-нибудь другое.</Text>
-
 
                     </View>
 
@@ -270,6 +215,15 @@ export default class Menu extends React.Component {
     }
 }
 
+function bindAction(dispatch) {
+    return {};
+}
+
+const mapStateToProps = state => ({
+    restaurants: state.restaurant.restaurants
+});
+const MenuSwag = connect(mapStateToProps, bindAction)(Menu);
+export default MenuSwag;
 
 const styles = {
     container: {

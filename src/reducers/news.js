@@ -1,12 +1,13 @@
 import {GET_NEWS, GET_NEWS_FULFILLED, GET_NEWS_PENDING, GET_NEWS_REJECTED} from "../actions/news";
+
 export type State = {
     news: [],
-    getNewsPending:boolean
+    getNewsPending: boolean
 }
 
 const initialState = {
     news: [],
-    getNewsPending:false
+    getNewsPending: false
 };
 
 export default function (state: State = initialState, action) {
@@ -14,7 +15,8 @@ export default function (state: State = initialState, action) {
         return {
             ...state,
             getNewsPending: false,
-            news: action.payload.news
+            news: action.payload.list,
+            hash: action.payload._hash,
         };
     }
     if (action.type === GET_NEWS_PENDING) {
