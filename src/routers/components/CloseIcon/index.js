@@ -1,15 +1,14 @@
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
-import {Icon} from 'native-base';
-import ChesterIcon from "../../../components/Common/ChesterIcon/index";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default BasketIcon = ({navigation}) => {
     return (
         <View>
             <TouchableOpacity onPress={() => {
-                navigation.navigate('Basket');
+                navigation.goBack(null);
             } }>
-                <ChesterIcon name="trash" size={22} color={"#fff"} style={{padding: 10, marginLeft: 10}}/>
+                <Ionicons name="ios-close" size={48} color={"#fff"} style={{padding: 10, marginLeft: 10,marginTop:5,paddingVertical:5}}/>
             </TouchableOpacity>
         </View>
     );

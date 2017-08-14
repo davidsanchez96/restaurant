@@ -1,3 +1,6 @@
+/*
+ * @flow
+ */
 import React from 'react';
 import {Body, Button, Card, CardItem, Container, Content, Icon, Left, Right, Text, View} from 'native-base';
 import {FlatList, Image, TouchableOpacity, Animated, TouchableWithoutFeedback} from "react-native";
@@ -10,7 +13,9 @@ import RestaurantContact from "../common/RestaurantContact/index";
 
 export default class CategoryList extends React.Component {
 
-
+    props: {
+        basket?: boolean
+    };
     state = {
         selected: {},
         active: null,
@@ -125,13 +130,13 @@ export default class CategoryList extends React.Component {
 
                 <View style={styles.info}>
                     <TouchableOpacity style={styles.infoTouch} onPress={() => {
-                        this.props.navigation.navigate('Dish', {name: item.name})
+                        this.props.navigation.navigate('Dish', {name: item.name, dish:item})
                     }}>
 
 
-                        <Image source={require('../../../../assets/images/cafe-1.png')} style={styles.image}/>
+                        <Image   source={{uri: item.photos.thumb}} style={styles.image}/>
                         <View style={styles.infoBlockText}>
-                            <Text style={styles.infoText}>{item.name}</Text>
+                            <Text style={styles.infoText}>{item.title}</Text>
                             <Text style={styles.weight}>{item.weight + "г"}</Text>
                         </View>
                     </TouchableOpacity>
@@ -148,7 +153,23 @@ export default class CategoryList extends React.Component {
     };
 
     renderButton(item) {
+        if (this.props.basket) {
+            return this.renderBasketButton(item);
+        }
+        else {
+            return this.renderCategoryButton(item);
+        }
+    }
 
+    renderBasketButton(item) {
+        return (  <Button bordered warning rounded style={styles.addItemButton} onPress={() => {
+            this.props.navigation.navigate('Dish', {name: item.name})
+        }}>
+            <Text style={styles.addItemButtonText}>{item.count + ' ' + 'X' + ' ' + item.price + " ₽"}</Text>
+        </Button>        )
+    }
+
+    renderCategoryButton(item) {
         if (item.id === this.state.active && this.state.selected[item.id] > 0) {
             return (
                 <View style={styles.changeCountItemButton}>
@@ -273,7 +294,7 @@ const styles = {
     image: {
         width: 70,
         height: 70,
-        borderRadius: 40
+        borderRadius: 35
     },
     addItemButton: {
         height: 28,

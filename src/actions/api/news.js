@@ -8,11 +8,10 @@ class NewsServiceImpl {
 
     async getNews(restaurantId) {
 
-        /* let res = await this.Api.get(`/restaurant/combined`,{
-         body:{
-         restaurantId
-         }
-         });
+
+        /*let url = restaurantId ? '/news/restaurant/' + restaurantId : '/news';
+
+         let res = await this.Api.get(url);
          if (res.err) throw res.err;
 
          return res.body;*/
@@ -33,21 +32,21 @@ class NewsServiceImpl {
                         name: 'Открытие летней веранда рестобара',
                         description: 'Описание',
                         date: moment(),
-                        restaurant:'Рестобар Chester'
+                        restaurant: 'Рестобар Chester'
                     },
                     {
                         id: 2,
                         name: 'Открытие летней веранда рестобара',
                         description: 'Описание 2',
                         date: moment().add(-1, 'days'),
-                        restaurant:'Рестобар Chester'
+                        restaurant: 'Рестобар Chester'
                     },
                     {
                         id: 3,
                         name: 'Открытие летней веранда рестобара',
                         description: 'Описание 3',
                         date: moment().add(-2, 'days'),
-                        restaurant:'Рестобар Chester'
+                        restaurant: 'Рестобар Chester'
                     }
                 ]
             }

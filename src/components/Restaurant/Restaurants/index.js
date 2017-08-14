@@ -18,10 +18,14 @@ class Restaurants extends React.Component {
         if (this.props.restaurants) {
             Object.keys(this.props.restaurants).map((key, i) => {
                 let item = this.props.restaurants[key];
-
-                let service = new TimeService();
-                this.days = service.getTimesheet(item.schedule);
-                item.currentDay = this.days.find((item) => item.isCurrent);
+                if(item.schedule.length===undefined) {
+                    let service = new TimeService();
+                    this.days = service.getTimesheet(item.schedule);
+                    item.currentDay = this.days.find((item) => item.isCurrent);
+                }
+                else {
+                    item.currentDay = {isOpen:false}
+                }
 
             });
         }
@@ -79,6 +83,11 @@ class Restaurants extends React.Component {
         </TouchableOpacity>
     }
 
+    _onRefresh()
+    {
+        this.props.getRestaurants();
+    }
+
     render() {
         this.updateSchedule();
         return (
@@ -90,14 +99,14 @@ class Restaurants extends React.Component {
 
                     <FlatList
 
-                        data={Object.keys(this.props.restaurants).map((key) => this.props.restaurants[key])}
+                        data={Object.keys(this.props.restaurants).map((key) => this.props.restaurants[key]).filter((item)=>item.photos.length>0)}
                         renderItem={this._renderItem}
                         extraData={this.state}
                         keyExtractor={item => item.id}
                         refreshControl={
                             <RefreshControl
                                 refreshing={this.props.isPending}
-                                onRefresh={this._onRefresh}
+                                onRefresh={()=>{this._onRefresh()}}
                                 tintColor="#fff"
                                 titleColor="#fff"
                             />

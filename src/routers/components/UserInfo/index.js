@@ -4,6 +4,7 @@ import {Button, Text, View} from "native-base";
 import platform from "../../../../native-base-theme/variables/platform";
 import {connect} from "react-redux";
 import {setSignState, signOut} from "../../../actions/user";
+import {ImagePicker} from "expo";
 class UserInfo extends React.Component {
     render() {
 
@@ -16,12 +17,13 @@ class UserInfo extends React.Component {
             return (<View style={styles.container}>
 
                 <View style={styles.avatarOuter}>
+                    <TouchableOpacity  onPress={this._pickImage}>
+                        <View style={styles.avatarInner}>
 
-                    <View style={styles.avatarInner}>
-
-                        <Image source={require('../../../../assets/images/navigation/user_icon.png')}
-                               style={{width: 48, resizeMode: 'contain'}}/>
-                    </View>
+                            <Image source={require('../../../../assets/images/navigation/user_icon.png')}
+                                   style={{width: 48, resizeMode: 'contain'}}/>
+                        </View>
+                    </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity onPress={() => {
@@ -43,6 +45,19 @@ class UserInfo extends React.Component {
         }
 
     }
+
+    _pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+        });
+
+        console.log(result);
+
+        if (!result.cancelled) {
+            this.setState({ image: result.uri });
+        }
+    };
 }
 
 function bindAction(dispatch) {

@@ -24,8 +24,12 @@ export default class RestaurantContact extends React.Component {
 
         if (this.props.restaurant.schedule) {
             let timeService = new TimeService();
-            this.days = timeService.getTimesheet(this.props.restaurant.schedule);
-            this.currentDay = this.days.find((item) => item.isCurrent);
+            if(!this.props.restaurant.schedule.length)
+            {
+                this.days = timeService.getTimesheet(this.props.restaurant.schedule);
+                this.currentDay = this.days.find((item) => item.isCurrent);
+            }
+
         }
 
     }

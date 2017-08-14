@@ -10,6 +10,7 @@ import UserInfo from "./components/UserInfo/index";
 import platform from "../../native-base-theme/variables/platform";
 import ChesterIcon from "../components/Common/ChesterIcon/index";
 import ProfileStack from "./ProfileStack";
+import BasketStack from "./BasketStack";
 
 export default NavigationDrawer = DrawerNavigator({
         Restaurant: {
@@ -47,7 +48,7 @@ export default NavigationDrawer = DrawerNavigator({
             navigationOptions: {
                 title: 'Ваш профиль'
             }
-        },
+        }
     },
     {
         cardStyle: {
@@ -93,7 +94,7 @@ class CustomNavigationDrawer extends React.Component {
                                  style={{marginTop: -20}}
                                  inactiveTintColor="#fff"
                                  items={this.props.items.filter((item) => {
-                                     return item.key !== 'Profile'
+                                     return item.key !== 'Profile' &&  item.key !== 'Корзина'
                                  })}
 
                     />

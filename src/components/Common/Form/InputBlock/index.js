@@ -46,5 +46,25 @@ export const InputBlockStyles = {
         fontSize: 20,
         paddingVertical: 16,
         color: "#fff"
+    },
+    inputBlockV: {
+        backgroundColor: '#2B3034',
+        paddingHorizontal: 16,
+        borderBottomWidth: 1,
+        borderColor: platform.brandDivider
+    },
+    inputLabelV: {
+        paddingTop:15,
+        color: '#B3BBC1',
+        fontFamily: platform.fontFamily,
+        fontSize: 18,
+        lineHeight: 20,
+    },
+    inputV: {
+        width:'100%',
+        fontFamily: platform.fontFamily,
+        fontSize: 20,
+        paddingVertical: 16,
+        color: "#fff"
     }
 };

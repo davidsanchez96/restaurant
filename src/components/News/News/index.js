@@ -16,11 +16,13 @@ class News extends React.Component {
     state = {};
 
     componentWillMount() {
-        this.props.getNews();
+        let key = this.props.navigation.state.params && this.props.navigation.state.params.key;
+        this.props.getNews(key);
     }
 
     _onRefresh = () => {
-        this.props.getNews();
+        let key = this.props.navigation.state.params && this.props.navigation.state.params.key;
+        this.props.getNews(key);
     };
 
     render() {

@@ -4,40 +4,29 @@ import {FlatList, Image, TouchableOpacity, Animated, TouchableWithoutFeedback} f
 import {signStackStyle} from "../../../routers/SignStack";
 
 import CategoryList from "./CategoryList";
+import {connect} from "react-redux";
 
-export default class Category extends React.Component {
+class Category extends React.Component {
     static navigationOptions = ({navigation, screenProps}) => ({
         title: navigation.state.params.name
     });
 
 
-
     render() {
-        this.data = [
-            {
-                name: "Салат греческий",
-                id: 12,
-                weight: 280,
-                price: 240,
 
-
-                fadeAnim: new Animated.Value(0),
-            }, {
-                name: "Руккола с беконом",
-                id: 14,
-                weight: 320,
-                price: 340,
-                fadeAnim: new Animated.Value(0),
-            },
-            {
-                name: "Салат из баклажанов", id: 16, weight: 280, price: 300,
-                fadeAnim: new Animated.Value(0),
+        let restaurant = this.props.navigation.state.params.restaurant;
+        let id = this.props.navigation.state.params.id;
+        let currentCategory = restaurant.menu.categories.find((item) => {
+            if (item.categories) {
+                return item.categories.find((category) => category.id === id);
             }
-        ];
+            return item.id === id;
+        });
+
         return (
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
 
-                    <CategoryList data={this.data} navigation={this.props.navigation}/>
+                <CategoryList data={currentCategory.items} navigation={this.props.navigation}/>
 
 
             </Image>
@@ -46,5 +35,12 @@ export default class Category extends React.Component {
     }
 }
 
-
+function bindAction(dispatch) {
+    return {};
+}
+const mapStateToProps = state => ({
+    restaurants: state.restaurant.restaurants
+});
+const CategorySwag = connect(mapStateToProps, bindAction)(Category);
+export default CategorySwag;
 const styles = {};

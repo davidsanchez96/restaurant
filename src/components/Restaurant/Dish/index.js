@@ -40,7 +40,7 @@ export default class Dish extends React.Component {
         this.setState({like:!this.state.like});
     }
     render() {
-
+        let dish = this.props.navigation.state.params.dish;
         return (
 
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
@@ -48,7 +48,7 @@ export default class Dish extends React.Component {
                 <View style={styles.container}>
                     <View>
 
-                        <Image source={require('../../../../assets/images/cafe-1.png')} style={styles.image}>
+                        <Image  source={{uri: dish.photos.main}} style={styles.image}>
                         </Image>
                         <LinearGradient
                             colors={['#000', 'transparent']}
@@ -71,7 +71,7 @@ export default class Dish extends React.Component {
                         >
 
                             <Text style={styles.subInfoWeight}>
-                                280г
+                                {dish.weight+'г'}
                             </Text>
                             <View style={styles.subInfoLikeBlock}>
                                 <Text style={styles.subInfoLike}>12</Text>
@@ -115,10 +115,8 @@ export default class Dish extends React.Component {
 
                     <View style={styles.contentBlock}>
                         <View>
-                            <Text style={styles.header}>Капрезе</Text>
-                            <Text style={styles.text}>Классический итальянский салат, в котором чередуются бакинские
-                                помидоры и сыр Моцарелла
-                                под соусом Песто. Подается с рукколой и прошутто. </Text>
+                            <Text style={styles.header}>{dish.title}</Text>
+                            <Text style={styles.text}>{dish.description}</Text>
                         </View>
                         <View style={styles.buttonBlock}>
                             <Button success rounded style={{flex: 1, marginRight: 13, justifyContent: 'center'}}>
