@@ -48,8 +48,9 @@ export default class SignPhoneInput extends React.Component {
                     options={{mask: '+7 999 999 99 99'}}
                     style={{...styles.phoneInput, color: color}}
                     value={this.state.text}
-
+                    keyboardAppearance="dark"
                     placeholder="+7"
+                    autoCorrect={false}
                     underlineColorAndroid="transparent"
                     onChangeText={(text) => {
                         this.changeNumber(text)

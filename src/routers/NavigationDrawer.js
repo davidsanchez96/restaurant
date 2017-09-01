@@ -11,6 +11,7 @@ import platform from "../../native-base-theme/variables/platform";
 import ChesterIcon from "../components/Common/ChesterIcon/index";
 import ProfileStack from "./ProfileStack";
 import BasketStack from "./BasketStack";
+import HistoryStack from "./HistoryStack";
 
 export default NavigationDrawer = DrawerNavigator({
         Restaurant: {
@@ -31,8 +32,8 @@ export default NavigationDrawer = DrawerNavigator({
                 title: 'Акции & Новости'
             }
         },
-        News3: {
-            screen: RestaurantsStack,
+        History: {
+            screen: HistoryStack,
             navigationOptions: {
                 title: 'История заказов'
             }

@@ -14,7 +14,8 @@ import RestaurantContact from "../common/RestaurantContact/index";
 export default class CategoryList extends React.Component {
 
     props: {
-        basket?: boolean
+        basket?: boolean,
+        data: []
     };
     state = {
         selected: {},
@@ -406,3 +407,53 @@ const styles = {
         lineHeight: 17
     },
 }
+
+
+export const fakeCategoryListArray = [
+    {
+        name: "Салат греческий",
+        id: 12,
+        weight: 280,
+        price: 240,
+        count: 2,
+
+        photos: {},
+
+        fadeAnim: new Animated.Value(0),
+    }, {
+        name: "Руккола с беконом",
+        id: 14,
+        weight: 320,
+        count: 1,
+        price: 340,
+        photos: {},
+
+        fadeAnim: new Animated.Value(0),
+    },
+    {
+        name: "Салат из баклажанов",
+        id: 16,
+        weight: 280,
+        price: 300,
+        count: 2,
+        photos: {},
+        fadeAnim: new Animated.Value(0),
+    }, {
+        name: "Руккола с беконом",
+        id: 133,
+        weight: 320,
+        count: 1,
+        price: 340,
+        photos: {},
+        fadeAnim: new Animated.Value(0),
+    },
+    {
+        name: "Салат из баклажанов",
+        id: 13333,
+        weight: 280,
+        price: 300,
+        count: 2,
+        photos: {},
+        fadeAnim: new Animated.Value(0),
+    }
+];

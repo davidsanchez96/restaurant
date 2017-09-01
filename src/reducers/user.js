@@ -1,8 +1,8 @@
 import {
     CONFIRM_CODE_FULFILLED,
-    CONFIRM_CODE_PENDING, CONFIRM_CODE_REJECTED,
+    CONFIRM_CODE_PENDING, CONFIRM_CODE_REJECTED, GET_USER_DATA, GET_USER_DATA_FULFILLED,
     SEND_CODE_FULFILLED, SEND_CODE_PENDING, SEND_CODE_REJECTED, SET_SIGN_STATE, SHOW_SIGN, SIGN_IN,
-    SIGN_OUT
+    SIGN_OUT, UPDATE_USER_DATA, UPDATE_USER_DATA_FULFILLED
 } from '../actions/user';
 import moment from "moment";
 
@@ -29,6 +29,7 @@ export default function (state: State = initialState, action) {
     if (action.type === SIGN_OUT) {
         return {
             ...state,
+            token: null,
             logged: false,
         };
     }
@@ -43,6 +44,7 @@ export default function (state: State = initialState, action) {
             ...state,
             sent: moment(),
             token: action.payload.token,
+            phone: action.payload.phone,
             sendCodePending: false
         };
     }
@@ -62,7 +64,6 @@ export default function (state: State = initialState, action) {
         return {
             ...state,
             sent: moment(),
-            phone: action.payload.phone,
             confirmCodePending: false,
             showSign: false
         };
@@ -79,5 +80,30 @@ export default function (state: State = initialState, action) {
             confirmCodePending: false
         };
     }
+    /*if (action.type === GET_USER_DATA) {
+        return {
+            ...state,
+            confirmCodePending: false
+        };
+    }*/
+    if (action.type === GET_USER_DATA_FULFILLED) {
+        return {
+            ...state,
+            userData: action.payload
+        };
+    }
+
+    /*if (action.type === UPDATE_USER_DATA) {
+        return {
+            ...state,
+            confirmCodePending: false
+        };
+    }
+    if (action.type === UPDATE_USER_DATA_FULFILLED) {
+        return {
+            ...state,
+            confirmCodePending: false
+        };
+    }*/
     return state;
 }

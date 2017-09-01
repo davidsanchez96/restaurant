@@ -73,6 +73,7 @@ class SignSecondStep extends React.Component {
             //try {
             let res = await this.props.confirmCode(text);
             this.props.signInAfter();
+            this.props.signInAfter();
             //}
             /*catch (ex) {
              this.setState((prevState, props) => ({
@@ -111,6 +112,8 @@ class SignSecondStep extends React.Component {
                                     <Item underline style={styles.codeItem}>
                                         <Input placeholder='код' style={styles.codeInput}
                                                onChangeText={(text) => this.changeCode(text)}
+                                               keyboardAppearance="dark"
+                                               autoCorrect={false}
                                                keyboardType="phone-pad"
                                         />
                                     </Item>
@@ -158,6 +161,7 @@ function bindAction(dispatch) {
         signInAfter: () => dispatch(setSignState(false)),
         signIn: () => dispatch(signIn()),
         confirmCode: (text) => dispatch(confirmCode(text)),
+        getUserData: (text) => dispatch(confirmCode(text)),
         sendCode: (number) => dispatch(sendCode(number))
     };
 }

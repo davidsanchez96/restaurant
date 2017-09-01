@@ -5,19 +5,47 @@ import platform from "../../../../native-base-theme/variables/platform";
 import {connect} from "react-redux";
 import {setSignState, signOut} from "../../../actions/user";
 import {ImagePicker} from "expo";
+
 class UserInfo extends React.Component {
     render() {
 
 
         if (this.props.logged) {
 
+            return (<View style={styles.container}>
 
+                <View style={styles.avatarOuter}>
+                    <TouchableOpacity onPress={this._pickImage}>
+                        <View style={styles.avatarInner}>
+
+                            <Image source={require('../../../../assets/images/navigation/user_icon.png')}
+                                   style={{width: 48, resizeMode: 'contain'}}/>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity onPress={() => {
+
+                    this.props.navigation.navigate('Profile')
+                }
+                }>
+                    <Text style={styles.bottomAvatarText}>Ваш аккаунт</Text>
+                </TouchableOpacity>
+                <View>
+                    <Button style={styles.button} rounded warning onPress={() => {
+                        this.props.logOut()
+                    }}>
+                        <Text style={styles.buttonText}>Выйти</Text>
+                    </Button>
+
+                </View>
+            </View>)
         }
         else {
             return (<View style={styles.container}>
 
                 <View style={styles.avatarOuter}>
-                    <TouchableOpacity  onPress={this._pickImage}>
+                    <TouchableOpacity onPress={this._pickImage}>
                         <View style={styles.avatarInner}>
 
                             <Image source={require('../../../../assets/images/navigation/user_icon.png')}
@@ -55,7 +83,7 @@ class UserInfo extends React.Component {
         console.log(result);
 
         if (!result.cancelled) {
-            this.setState({ image: result.uri });
+            this.setState({image: result.uri});
         }
     };
 }
@@ -66,8 +94,9 @@ function bindAction(dispatch) {
         signIn: () => dispatch(setSignState(true))
     };
 }
+
 const mapStateToProps = state => ({
-    logged: state.user.logged,
+    logged: state.user.token,
 });
 
 

@@ -43,7 +43,7 @@ class Menu extends React.Component {
                     style={styles.listItem}
                     onPress={() => {
                         if (category) {
-                            this.changeState(section.title)
+                            this.changeState(section.id)
                         }
                         else {
                             this.props.navigation.navigate('Category', {
@@ -100,7 +100,7 @@ class Menu extends React.Component {
 
 
     getAllDish() {
-        this.props.restaurants[this.props.navigation.state.params.key].menu.categories
+        return this.props.restaurants[this.props.navigation.state.params.key].menu.categories
             .reduce((a, b) => {
                 let items = [];
                 if (b.categories) {
@@ -123,11 +123,11 @@ class Menu extends React.Component {
             else {
                 result = this.getAllDish();
             }
-            result = result.filter((dish) => dish.title.includes(text));
+            result = result.filter((dish) => dish.title.includes(text.trim()));
 
             this.setState({
                 text: text,
-                results: fake.filter((item) => item.name.includes(text))
+                results: result
             });
         }
         else {
@@ -170,8 +170,8 @@ class Menu extends React.Component {
                     return (
                         <View key={i}>
                             {this._renderHeader(item, true)}
-                            <Collapsible collapsed={this.state.activeSection !== item.title}>
-                                {this.state.activeSection === item.title ? this._renderContent(item) :
+                            <Collapsible collapsed={this.state.activeSection !== item.id}>
+                                {this.state.activeSection === item.id ? this._renderContent(item) :
                                     <View/>}
                             </Collapsible>
                         </View>)

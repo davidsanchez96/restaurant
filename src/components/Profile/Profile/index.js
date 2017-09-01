@@ -13,6 +13,10 @@ import Swipeout from "react-native-swipeout";
 import ChesterIcon from "../../Common/ChesterIcon/index";
 import MyModal from "../../Common/MyModal/index";
 import {Platform} from "react-native";
+import {getUserData, updateUserData} from "../../../actions/user";
+import * as _ from "lodash";
+
+
 const currentPlatform = Platform.OS;
 
 class Profile extends React.Component {
@@ -20,17 +24,24 @@ class Profile extends React.Component {
     state = {
         push: true,
         isRemoveOpen: false,
-        removeCard: null
+        removeCard: null,
+        userData: {}
     };
 
-    componentWillMount() {
 
+    componentWillMount() {
+        this.props.getUserData();
     }
 
     componentWillUnmount() {
 
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            userData: nextProps.user
+        });
+    }
 
     changePhone() {
         Alert.alert(
@@ -63,9 +74,76 @@ class Profile extends React.Component {
                     }
                     }>
 
-                        <InputBlock name="Имя" keyboardType="email-address"/>
-                        <InputBlock name="Фамилия"/>
-                        <InputBlock name="Email"/>
+                        <InputBlock name="Имя"
+                                    keyboardAppearance="dark"
+                                    autoCorrect={false}
+                                    value={this.state.userData.first_name}
+                                    onChangeText={(text) => {
+                                        this.setState({
+                                            userData: {
+                                                ...this.state.userData,
+                                                first_name: text
+                                            }
+                                        })
+                                    }}
+                                    onBlur={() => {
+                                        this.props.updateUserData(_.pick(this.state.userData, ['first_name', 'last_name', 'notifications', 'email']));
+                                    }}
+
+                        />
+                        <InputBlock name="Фамилия"
+                                    keyboardAppearance="dark"
+                                    autoCorrect={false}
+                                    value={this.props.user.last_name}
+                                    onChangeText={(text) => {
+                                        this.setState({
+                                            userData: {
+                                                ...this.state.userData,
+                                                last_name: text
+                                            }
+                                        })
+                                    }}
+                                    onBlur={() => {
+                                        this.props.updateUserData(_.pick(this.state.userData, ['first_name', 'last_name', 'notifications', 'email']));
+                                    }}
+
+
+                        />
+                        <InputBlock name="Email"
+                                    keyboardType="email-address"
+                                    keyboardAppearance="dark"
+                                    autoCorrect={false}
+                                    value={this.state.userData.email}
+                                    onChangeText={(text) => {
+                                        this.setState({
+                                            userData: {
+                                                ...this.state.userData,
+                                                email: text
+                                            }
+                                        })
+                                    }}
+                                    onFocus={() => {
+
+                                        this.backupEmail = this.state.userData.email;
+
+                                    }}
+                                    onBlur={() => {
+
+                                        if (!this.validateEmail(this.email)) {
+                                            this.setState({
+                                                userData: {
+                                                    ...this.state.userData,
+                                                    email: this.backupEmail
+                                                }
+                                            })
+                                        } else {
+                                            this.props.updateUserData(_.pick(this.state.userData, ['first_name', 'last_name', 'notifications', 'email']));
+                                        }
+
+
+                                    }}
+
+                        />
                     </View>
 
                     <View style={{
@@ -73,7 +151,6 @@ class Profile extends React.Component {
                         borderColor: platform.brandDivider,
                         marginTop: 15
                     }}>
-
                         <View style={InputBlockStyles.inputBlock}>
                             <Text style={InputBlockStyles.inputLabel}>Телефон</Text>
 
@@ -83,9 +160,10 @@ class Profile extends React.Component {
                                 type={'custom'}
                                 ref={'phone'}
                                 options={{mask: '+7 (999) 999-99-99'}}
-
-
-                                value="+7"
+                                editable={false}
+                                keyboardAppearance="dark"
+                                autoCorrect={false}
+                                value={this.props.phone}
                                 underlineColorAndroid="transparent"
                                 onChangeText={(text) => {
                                     this.changeNumber(text)
@@ -110,8 +188,14 @@ class Profile extends React.Component {
                             <Text style={InputBlockStyles.inputLabel}>Push-уведомления</Text>
 
                             <View style={{paddingVertical: 16}}>
-                                <Switch value={this.state.push} onValueChange={(push) => {
-                                    this.setState({push})
+                                <Switch value={this.state.userData.notifications === 1} onValueChange={(push) => {
+                                    this.setState({
+                                        userData: {
+                                            ...this.state.userData,
+                                            notifications:  push ? 1 : 0
+                                        }
+                                    });
+                                    this.props.updateUserData(_.pick(this.state.userData, ['first_name', 'last_name', 'notifications', 'email']));
                                 }} onTintColor={currentPlatform === 'ios' ? platform.brandWarning : ''}/>
                             </View>
 
@@ -137,7 +221,10 @@ class Profile extends React.Component {
             </KeyboardAwareScrollView>
 
 
-            <MyModal style={{height: 215, backgroundColor: "#7A8187"}} isOpen={this.state.isRemoveOpen} ref="modal"
+            <MyModal style={{
+                height: 215,
+                backgroundColor: "#7A8187"
+            }} isOpen={this.state.isRemoveOpen} ref="modal"
                      position={'bottom'}
                      onRequestClose={() => this.setState({isRemoveOpen: false})}>
                 <View style={modalCardStyles.modal}>
@@ -211,9 +298,10 @@ class Profile extends React.Component {
                     swipeoutBtns.push(
                         {
                             width: 88,
-                            component: <Button warning style={styles.swipeButton}><Text style={styles.swipeButtonText}
-                                                                                        numberOfLines={2}
-                                                                                        uppercase={false}>Сделать
+                            component: <Button warning style={styles.swipeButton}><Text
+                                style={styles.swipeButtonText}
+                                numberOfLines={2}
+                                uppercase={false}>Сделать
                                 основной</Text></Button>,
                             underlayColor: 'transparent'
                         })
@@ -236,7 +324,8 @@ class Profile extends React.Component {
 
 
                 return <View key={card.type}>
-                    <Swipeout backgroundColor={'#2B3034'} right={swipeoutBtns} buttonWidth={88} sensitivity={70}
+                    <Swipeout backgroundColor={'#2B3034'} right={swipeoutBtns} buttonWidth={88}
+                              sensitivity={70}
                               autoClose={true} scroll={() => true}>
                         <View style={styles.cardListItem}>
                             <View style={styles.cardListItemImage}>
@@ -268,13 +357,25 @@ class Profile extends React.Component {
             </TouchableOpacity>
         </View>
     }
+
+    validateEmail = (email) => {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    };
+
 }
 
+
 function bindAction(dispatch) {
-    return {};
+    return {
+        getUserData: () => dispatch(getUserData()),
+        updateUserData: (data) => dispatch(updateUserData(data)),
+    };
 }
+
 const mapStateToProps = state => ({
-    restaurants: state.restaurant.restaurants
+    phone: state.user.phone,
+    user: state.user.userData
 });
 const ProfileSwag = connect(mapStateToProps, bindAction)(Profile);
 export default ProfileSwag;
@@ -366,7 +467,7 @@ export const modalCardStyles = {
         marginRight: 14,
         height: 48,
         alignItems: 'center',
-        borderRadius:24
+        borderRadius: 24
     },
     buttonText: {
         fontSize: 22,

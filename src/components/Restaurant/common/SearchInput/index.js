@@ -83,6 +83,8 @@ export default class SearchInput extends React.Component {
                             <Input ref='search' placeholder={"Поиск по меню"} style={styles.codeInput}
                                    placeholderTextColor="#fff"
                                    clearButtonMode="while-editing"
+                                   autoCorrect={false}
+                                   keyboardAppearance="dark"
                                    onChangeText={(text) => this.onChangeText(text)} onFocus={() => {
                                 this.onFocus()
                             }}

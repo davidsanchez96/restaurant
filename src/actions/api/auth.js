@@ -26,6 +26,20 @@ class AuthServiceImpl {
         return res.body;
     }
 
+    async getUserData() {
+        let res = await this.Api.get(`/client/current`);
+        if (res.err) throw res.err;
+        return res.body;
+    }
+
+    async updateUserData(data) {
+        let res = await this.Api.put(`/client/current`, {
+            body: data
+        });
+        if (res.err) throw res.err;
+        return res.body;
+    }
+
 }
 
 export const AuthService = new AuthServiceImpl();

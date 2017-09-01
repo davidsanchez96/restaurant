@@ -113,11 +113,11 @@ export default class Dish extends React.Component {
 
 
                         <View style={styles.hang}>
-                            {newDish&&<View style={{flexDirection: 'row', alignItems: 'center', paddingRight: 12}}>
+                            {newDish && <View style={{flexDirection: 'row', alignItems: 'center', paddingRight: 12}}>
                                 <ChesterIcon name="star-16" size={16} color={platform.brandWarning}/>
                                 <Text style={styles.hangText}>Новое блюдо</Text>
                             </View>}
-                            {hot&&<View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            {hot && <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                 <ChesterIcon name="chili-16" size={16} color={platform.brandWarning}/>
                                 <Text style={styles.hangText}>Острое блюдо</Text>
 
@@ -131,7 +131,8 @@ export default class Dish extends React.Component {
                                 <Text style={styles.text}>{dish.description}</Text>
                             </View>
                             <View style={styles.buttonBlock}>
-                                <Button success rounded style={{flex: 1, marginRight: 13, justifyContent: 'center'}}>
+                                <Button success rounded
+                                        style={{width: '50%', marginRight: 13, justifyContent: 'center'}}>
                                     <Text>За баллы</Text>
                                 </Button>
 
@@ -156,10 +157,13 @@ export default class Dish extends React.Component {
                                                 <Icon name="remove" size={24}/>
                                             </Button>
 
-                                            <View style={styles.counterItemButton}>
+                                            <TouchableOpacity style={styles.counterItemButton}
+                                                              androidRippleColor="rgba(0, 0, 0, 0.15)" onPress={() => {
+                                                this.addItem()
+                                            }}>
                                                 <Text
                                                     style={styles.counterItemButtonText}> {this.state.count}</Text>
-                                            </View>
+                                            </TouchableOpacity>
 
                                             <View style={styles.plusItemButton}>
                                                 <Button androidRippleColor="rgba(0, 0, 0, 0.15)" bordered warning
@@ -279,10 +283,10 @@ const styles = {
         paddingRight: 0,
         flexDirection: 'row',
         justifyContent: "center",
-        flex: 1,
-        marginLeft: -3
+        flex: 1
     },
     plusItemButton: {
+        marginLeft: -1,
         borderBottomRightRadius: 34,
         borderTopRightRadius: 34,
         borderBottomLeftRadius: 0,
@@ -291,7 +295,6 @@ const styles = {
         paddingRight: 0,
         flexDirection: 'row',
         justifyContent: "center",
-        overflow: 'hidden',
         flex: 1
     },
     counterItemButton: {

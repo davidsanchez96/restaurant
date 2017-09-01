@@ -1,4 +1,5 @@
 import {AuthService} from "./api/auth";
+
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_OUT = 'SIGN_OUT';
 export const SET_SIGN_STATE = 'SET_SIGN_STATE';
@@ -12,6 +13,16 @@ export const CONFIRM_CODE = 'CONFIRM_CODE';
 export const CONFIRM_CODE_PENDING = 'CONFIRM_CODE_PENDING';
 export const CONFIRM_CODE_FULFILLED = 'CONFIRM_CODE_FULFILLED';
 export const CONFIRM_CODE_REJECTED = 'CONFIRM_CODE_REJECTED';
+
+export const GET_USER_DATA = 'GET_USER_DATA';
+export const GET_USER_DATA_PENDING = 'GET_USER_DATA_PENDING';
+export const GET_USER_DATA_FULFILLED = 'GET_USER_DATA_FULFILLED';
+export const GET_USER_DATA_REJECTED = 'GET_USER_DATA_REJECTED';
+
+export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
+export const UPDATE_USER_DATA_PENDING = 'UPDATE_USER_DATA_PENDING';
+export const UPDATE_USER_DATA_FULFILLED = 'UPDATE_USER_DATA_FULFILLED';
+export const UPDATE_USER_DATA_REJECTED = 'UPDATE_USER_DATA_REJECTED';
 
 
 const delay = (ms) => new Promise(resolve =>
@@ -36,6 +47,7 @@ export function setSignState(state) {
         payload: state
     };
 }
+
 export function sendCodeAction(promise) {
     return {
         type: SEND_CODE,
@@ -62,6 +74,36 @@ export const confirmCode = (code) => {
     return dispatch => {
         let promise = AuthService.confirmCode(code);
         dispatch(confirmCodeAction(promise));
+        return promise;
+    }
+};
+
+export function getUserDataAction(promise) {
+    return {
+        type: GET_USER_DATA,
+        payload: promise
+    }
+}
+
+export const getUserData = () => {
+    return dispatch => {
+        let promise = AuthService.getUserData();
+        dispatch(getUserDataAction(promise));
+        return promise;
+    }
+};
+
+export function updateUserDataAction(promise) {
+    return {
+        type: UPDATE_USER_DATA,
+        payload: promise
+    }
+}
+
+export const updateUserData = (data) => {
+    return dispatch => {
+        let promise = AuthService.updateUserData(data);
+        dispatch(updateUserDataAction(promise));
         return promise;
     }
 };

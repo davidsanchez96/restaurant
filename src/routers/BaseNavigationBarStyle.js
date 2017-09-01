@@ -21,6 +21,7 @@ export const BaseNavigationBarStyle = {
         fontSize: 24,
         fontFamily: platform.fontFamilyAccent,
         fontWeight:"normal",
+        marginHorizontal:0
     },
     headerTintColor: '#FFF'
 }

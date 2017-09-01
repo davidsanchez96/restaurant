@@ -9,6 +9,7 @@ import {Picker, TouchableOpacity} from "react-native";
 import moment from "moment";
 import 'moment-round'
 import Octicons from "@expo/vector-icons/Octicons";
+
 export default class SelectDate extends React.Component {
 
     state = {
@@ -172,7 +173,8 @@ export default class SelectDate extends React.Component {
                 </TouchableOpacity>
             </View>
 
-            <View >
+            <View>
+                {this.state.isOpen &&
                 <MyModal style={{height: 261, backgroundColor: "#2B3034"}} isOpen={this.state.isOpen} ref="modal"
                          position={'bottom'}
                          onRequestClose={() => {
@@ -219,7 +221,7 @@ export default class SelectDate extends React.Component {
                         </TouchableOpacity>
                     </View>
 
-                    <View >
+                    <View>
 
                         <View style={{
                             flexDirection: 'row',
@@ -278,7 +280,7 @@ export default class SelectDate extends React.Component {
                             }}/>
                     </View>
 
-                </MyModal>
+                </MyModal>}
             </View>
 
 

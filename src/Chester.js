@@ -9,6 +9,9 @@ import Api from "./actions/api/api"
 import {AppLoading} from "expo";
 class App extends React.Component {
 
+    props: {
+        basket?: boolean
+    };
 
     constructor(props) {
         super(props);
@@ -21,10 +24,7 @@ class App extends React.Component {
     }
 
     async loadPrefetch() {
-        if(this.props.user.token)
-        {
-            Api.jwt(this.props.user.token);
-        }
+
 
         let restaurants = await this.props.getRestaurants();
         if(restaurants.restaurants)
@@ -40,6 +40,15 @@ class App extends React.Component {
         if(this.props.isLoading!==nextProps.isLoading)
         {
             this.loadPrefetch();
+        }
+
+        if(nextProps.user.token)
+        {
+            Api.jwt(nextProps.user.token);
+        }
+        else
+        {
+            Api.jwt(null);
         }
     }
 
