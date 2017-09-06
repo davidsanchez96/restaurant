@@ -76,7 +76,15 @@ export default class BookTableConfirm extends React.Component {
                             </View>
 
 
-                            <View style={{...styles.inputBlock, marginTop: 15, flex: 1, flexDirection: 'column',padding:16}}>
+                            <View style={{
+                                ...styles.inputBlock,
+                                marginTop: 15,
+                                flex: 1,
+                                flexDirection: 'column',
+                                padding:16,
+                                borderTopWidth: 1,
+                                borderColor: platform.brandDivider
+                            }}>
 
                                 <Text style={{...styles.inputLabel, flex: 0, width: '100%'}}>Комментарий к заказу</Text>
 

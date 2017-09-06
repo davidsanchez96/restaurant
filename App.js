@@ -2,6 +2,7 @@ import React from 'react';
 import ChesterWithRedux from './src/setup'
 import {AppLoading, Font} from 'expo';
 import cacheAssetsAsync from "./utilities/cacheAssetsAsync";
+
 require('moment/locale/ru');
 
 export default class App extends React.Component {
@@ -49,6 +50,7 @@ export default class App extends React.Component {
                     {'Lumberjack': require('./assets/fonts/lumberjack.otf')},
                     {'Mozzart-sketch': require('./assets/fonts/MozzartSketch/MozzartSketch-ExtraBold.otf')},
                     {'Roboto_medium': require('./assets/fonts/lumberjack.otf')},
+                    {'icomoon': require('./assets/fonts/icomoon.ttf')}
                 ],
             });
         } catch (e) {

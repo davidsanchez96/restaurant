@@ -24,6 +24,10 @@ export const UPDATE_USER_DATA_PENDING = 'UPDATE_USER_DATA_PENDING';
 export const UPDATE_USER_DATA_FULFILLED = 'UPDATE_USER_DATA_FULFILLED';
 export const UPDATE_USER_DATA_REJECTED = 'UPDATE_USER_DATA_REJECTED';
 
+export const SEND_TICKET = 'SEND_TICKET';
+export const SEND_TICKET_PENDING = 'SEND_TICKET_PENDING';
+export const SEND_TICKET_FULFILLED = 'SEND_TICKET_FULFILLED';
+export const SEND_TICKET_REJECTED = 'SEND_TICKET_REJECTED';
 
 const delay = (ms) => new Promise(resolve =>
     setTimeout(resolve, ms)
@@ -104,6 +108,21 @@ export const updateUserData = (data) => {
     return dispatch => {
         let promise = AuthService.updateUserData(data);
         dispatch(updateUserDataAction(promise));
+        return promise;
+    }
+};
+
+export function sendTicketAction(promise) {
+    return {
+        type: SEND_TICKET,
+        payload: promise
+    }
+}
+
+export const sendTicket = (data) => {
+    return dispatch => {
+        let promise = AuthService.sendTicket(data);
+        dispatch(sendTicketAction(promise));
         return promise;
     }
 };

@@ -27,6 +27,12 @@ class News extends React.Component {
 
     render() {
         let restaurant = this.props.restaurants[this.props.navigation.state.params.key];
+
+        let newsData = this.props.news;
+        newsData = newsData.filter((news, pos) => {
+            return newsData.indexOf(newsData.find((inNews) => inNews.id === news.id)) === pos;
+        });
+
         return (
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
 
@@ -39,9 +45,9 @@ class News extends React.Component {
                                 Новости и акции
                             </Text>
                         }}
-                        data={this.props.news}
+                        data={newsData}
                         renderItem={(rowData) => <View style={{marginBottom: 25}}>
-                            <OneNews data={rowData.item} restaurant={restaurant}/>
+                            <OneNews data={rowData.item} restaurants={[restaurant]}/>
                         </View>}
                         extraData={this.state}
                         keyExtractor={item => item.id}
@@ -64,8 +70,8 @@ class News extends React.Component {
 
 function bindAction(dispatch) {
     return {
-        getNews: () => {
-            return dispatch(getNews());
+        getNews: (key) => {
+            return dispatch(getNews(key));
         }
     };
 }

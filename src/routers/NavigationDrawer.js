@@ -12,6 +12,9 @@ import ChesterIcon from "../components/Common/ChesterIcon/index";
 import ProfileStack from "./ProfileStack";
 import BasketStack from "./BasketStack";
 import HistoryStack from "./HistoryStack";
+import NewsStack from "./NewsStack";
+import FeedBackPage from "../components/FeedBack/FeedBackPage/index";
+import FeedBackStack from "./FeedBackStack";
 
 export default NavigationDrawer = DrawerNavigator({
         Restaurant: {
@@ -27,7 +30,7 @@ export default NavigationDrawer = DrawerNavigator({
             }
         },
         News2: {
-            screen: RestaurantsStack,
+            screen: NewsStack,
             navigationOptions: {
                 title: 'Акции & Новости'
             }
@@ -38,8 +41,8 @@ export default NavigationDrawer = DrawerNavigator({
                 title: 'История заказов'
             }
         },
-        News4: {
-            screen: RestaurantsStack,
+        FeedBack: {
+            screen: FeedBackStack,
             navigationOptions: {
                 title: 'Связаться с нами'
             }
@@ -95,7 +98,7 @@ class CustomNavigationDrawer extends React.Component {
                                  style={{marginTop: -20}}
                                  inactiveTintColor="#fff"
                                  items={this.props.items.filter((item) => {
-                                     return item.key !== 'Profile' &&  item.key !== 'Корзина'
+                                     return item.key !== 'Profile' && item.key !== 'Корзина'
                                  })}
 
                     />
@@ -119,6 +122,7 @@ class CustomNavigationDrawer extends React.Component {
 function bindAction(dispatch) {
     return {};
 }
+
 const mapStateToProps = state => ({});
 
 const styles = {

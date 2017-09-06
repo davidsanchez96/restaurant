@@ -2,35 +2,34 @@ import Restaurant from "../components/Restaurant/Restaurant/index";
 import {TabBarTop, TabNavigator} from "react-navigation";
 import platform from "../../native-base-theme/variables/platform";
 import Menu from "../components/Restaurant/Menu/index";
-import News from "../components/News/News/index";
+import News from "../components/News/RestaurantNews";
 import Team from "../components/Restaurant/Team/index";
 import BookTable from "../components/Restaurant/BookTable/index";
 
 
-
-const defaultTobBar ={
+const defaultTobBar = {
     style: {
         backgroundColor: "rgb(44, 47, 51)",
         shadowColor: 'rgba(0, 0, 0, 0.5)',
         shadowOffset: {width: 0, height: 4},
         shadowOpacity: 7,
         shadowRadius: 8,
-        borderTopWidth:0
+        borderTopWidth: 0
     },
     tabStyle: {
         paddingLeft: 0,
         paddingRight: 0,
-        marginRight:5,
-        marginLeft:5,
-        paddingBottom:16,
-        paddingTop:16        ,
+        marginRight: 5,
+        marginLeft: 5,
+        paddingBottom: 16,
+        paddingTop: 16,
 
     },
     upperCaseLabel: false,
     labelStyle: {
         fontSize: 12,
         margin: 0,
-        fontFamily:platform.fontFamily
+        fontFamily: platform.fontFamily
     },
     activeTintColor: platform.brandWarning,
     inactiveTintColor: "#fff",
@@ -77,13 +76,11 @@ const RestaurantTabs = TabNavigator({
 }, {
     tabBarComponent: TabBarTop,
     tabBarPosition: 'top',
-    backBehavior:"none",
-    swipeEnabled:true,
-    lazy:false,
+    backBehavior: "none",
+    swipeEnabled: true,
+    lazy: false,
     tabBarOptions: defaultTobBar
 });
-
-
 
 
 export default RestaurantTabs;

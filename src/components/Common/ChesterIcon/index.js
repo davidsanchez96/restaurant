@@ -11,9 +11,6 @@ export default class ChesterIcon extends React.Component {
     };
 
     async componentDidMount() {
-        await Font.loadAsync({
-            'icomoon': require('../../../../assets/fonts/icomoon.ttf')
-        });
         Icon = createIconSetFromIcoMoon(icoMoonConfig, 'icomoon');
         this.setState({fontLoaded: true});
 

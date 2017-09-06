@@ -18,12 +18,21 @@ export default class OneNews extends React.Component {
 
                 <Image source={require('../../../../assets/images/cafe-1.png')} style={styles.image}>
                 </Image>
-                <View style={{marginHorizontal:16}}>
+                <View style={{marginHorizontal: 16}}>
                     <View style={styles.infoBlock}>
 
                         <Text style={styles.infoDate}>{moment(this.props.data.event_date).format('D MMM')}</Text>
-                        <View style={styles.infoPoint}/>
-                        <Text style={styles.infoName}>{this.props.restaurant.title_short}</Text>
+                        {
+                            this.props.restaurants.map((rest) => {
+                                return (
+                                    <View style={{flexDirection: 'row', alignItems: 'center'}} key={rest.id}>
+                                        <View style={styles.infoPoint}/>
+                                        <Text style={styles.infoName}>{rest.title_short}</Text>
+                                    </View>
+                                )
+                            })
+                        }
+
                     </View>
                     <Text style={styles.header}>
                         {this.props.data.title}
@@ -49,7 +58,7 @@ const styles = {
     },
     infoBlock: {
         flexDirection: 'row',
-        alignItems:'center'
+        alignItems: 'center'
     },
     infoDate: {
         color: platform.brandWarning,

@@ -1,7 +1,10 @@
 import {
     CONFIRM_CODE_FULFILLED,
     CONFIRM_CODE_PENDING, CONFIRM_CODE_REJECTED, GET_USER_DATA, GET_USER_DATA_FULFILLED,
-    SEND_CODE_FULFILLED, SEND_CODE_PENDING, SEND_CODE_REJECTED, SET_SIGN_STATE, SHOW_SIGN, SIGN_IN,
+    SEND_CODE_FULFILLED, SEND_CODE_PENDING, SEND_CODE_REJECTED, SEND_TICKET, SEND_TICKET_FULFILLED, SEND_TICKET_PENDING,
+    SEND_TICKET_REJECTED,
+    SET_SIGN_STATE,
+    SHOW_SIGN, SIGN_IN,
     SIGN_OUT, UPDATE_USER_DATA, UPDATE_USER_DATA_FULFILLED
 } from '../actions/user';
 import moment from "moment";
@@ -105,5 +108,28 @@ export default function (state: State = initialState, action) {
             confirmCodePending: false
         };
     }*/
+
+
+    if (action.type === SEND_TICKET_PENDING) {
+        return {
+            ...state,
+            sendTicketPending: true
+        };
+    }
+
+    if (action.type === SEND_TICKET_FULFILLED) {
+        return {
+            ...state,
+            sendTicketPending: false
+        };
+    }
+
+    if (action.type === SEND_TICKET_REJECTED) {
+        return {
+            ...state,
+            sendTicketPending: false
+        };
+    }
+
     return state;
 }
