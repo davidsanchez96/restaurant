@@ -45,6 +45,7 @@ export default class App extends React.Component {
                     require('./assets/images/payment/credit-card.png'),
                     require('./assets/images/payment/credit-card-cvv.png'),
                     require('./assets/images/payment/credit-card-date.png'),
+                    require('./assets/images/my_card/star.png'),
                 ],
                 fonts: [
                     {'Lumberjack': require('./assets/fonts/lumberjack.otf')},

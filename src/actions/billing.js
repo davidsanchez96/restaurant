@@ -1,22 +1,38 @@
+export const ADD_DISH = 'ADD_DISH';
+export const REMOVE_DISH = 'REMOVE_DISH';
+export const CLEAR_BASKET = 'CLEAR_BASKET';
+export const INIT_BASKET = 'INIT_BASKET';
 
-
-export const GET_NEWS = 'GET_NEWS';
-export const GET_NEWS_PENDING = 'GET_NEWS_PENDING';
-export const GET_NEWS_FULFILLED = 'GET_NEWS_FULFILLED';
-export const GET_NEWS_REJECTED = 'GET_NEWS_REJECTED';
-
-
-export function getNewsAction(promise) {
+export function addDish(dish) {
     return {
-        type: GET_NEWS,
-        payload: promise
+        type: ADD_DISH,
+        payload: dish
     }
 }
 
-export const getNews = (restaurantId) => {
-    return dispatch => {
-        let promise = NewsService.getNews(restaurantId);
-        dispatch(getNewsAction(promise));
-        return promise;
+export function removeDish(dish) {
+    return {
+        type: REMOVE_DISH,
+        payload: dish
+
     }
-};
+}
+
+export function clearBasket() {
+    return {
+        type: CLEAR_BASKET
+    }
+}
+
+export function initBasket(restaurantId) {
+    return {
+        type: INIT_BASKET,
+        payload: {
+            restaurantId
+        }
+    }
+}
+
+
+
+

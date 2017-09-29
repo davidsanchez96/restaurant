@@ -13,7 +13,7 @@ import ChesterIcon from "../../Common/ChesterIcon/index";
 import MyModal from "../../Common/MyModal/index";
 import {Constants} from "expo";
 import moment from "moment";
-
+import {clearBasket} from "../../../actions/billing";
 
 
 class BasketPage extends React.Component {
@@ -35,14 +35,17 @@ class BasketPage extends React.Component {
 
 
     clearBasket() {
+
+
+        this.props.clearBasket();
         this.setState({isOpenClearBasket: false})
     }
 
     requestLunch() {
-        let k =moment().format('H');
+        let k = moment().format('H');
         let hour = parseInt(k);
 
-        if (hour > 12 && hour < 16) {
+        if (hour >= 12 && hour < 16) {
             this.setState({type: 'lunch'})
         }
         else {
@@ -53,104 +56,105 @@ class BasketPage extends React.Component {
 
 
     render() {
-        this.data = [
-            {
-                name: "Салат греческий",
-                id: 12,
-                weight: 280,
-                price: 240,
-                count: 2,
 
-                photos:{},
 
-                fadeAnim: new Animated.Value(0),
-            }, {
-                name: "Руккола с беконом",
-                id: 14,
-                weight: 320,
-                count: 1,
-                price: 340,
-                photos:{},
+        let result = [];
+        let price = 0;
+        if (this.props.billing.restaurantId) {
+            let allDishes = this.getAllDish(this.props.billing.restaurantId);
+            for (let dish of this.props.billing.dishes) {
 
-                fadeAnim: new Animated.Value(0),
-            },
-            {
-                name: "Салат из баклажанов",
-                id: 16,
-                weight: 280,
-                price: 300,
-                count: 2,
-                photos:{},
-                fadeAnim: new Animated.Value(0),
-            }, {
-                name: "Руккола с беконом",
-                id: 133,
-                weight: 320,
-                count: 1,
-                price: 340,
-                photos:{},
-                fadeAnim: new Animated.Value(0),
-            },
-            {
-                name: "Салат из баклажанов",
-                id: 13333,
-                weight: 280,
-                price: 300,
-                count: 2,
-                photos:{},
-                fadeAnim: new Animated.Value(0),
+
+                let storedDish = allDishes.find(d => d.id === dish.id);
+                if (storedDish) {
+                    price = dish.count * storedDish.price;
+
+                    result.push({
+                        ...dish,
+                        ...storedDish
+                    })
+                }
+
             }
-        ];
+        }
 
 
         return <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
 
             <ScrollView>
 
-                <View style={styles.pills}>
+                {result.length > 0 && <View>
+                    <View style={styles.pills}>
 
-                    <TouchableOpacity style={[styles.pill, this.state.type === 'out' && styles.activePill]}
-                                      onPress={() => {
-                                          this.setState({type: 'out'})
-                                      }}>
-                        <Text style={styles.pillText}>
-                            Заберу сам -20%
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.pill, this.state.type === 'lunch' && styles.activePill]}
-                                      onPress={() => {
-                                          this.requestLunch();
-                                      }}>
-                        <Text style={styles.pillText}>
-                            Ланч в ресторане
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <Text style={styles.header}>Рестобар Chester </Text>
-                <View style={styles.categoryList}>
-                    <CategoryList data={this.data} basket={true}/>
-                </View>
-                <View style={styles.clear}>
-                    <TouchableOpacity onPress={()=>{
-                        this.setState({isOpenClearBasket: true})
-                    }}>
-                        <Text style={styles.clearText}>Очистить корзину</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.bottom}>
-                    <View style={styles.price}>
-                        <Text style={styles.priceText}>1000 ₽</Text>
-                        <Text style={styles.priceTextDiscount}>700 ₽</Text>
+                        <TouchableOpacity style={[styles.pill, this.state.type === 'out' && styles.activePill]}
+                                          onPress={() => {
+                                              this.setState({type: 'out'})
+                                          }}>
+                            <Text style={styles.pillText}>
+                                Заберу сам -20%
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.pill, this.state.type === 'lunch' && styles.activePill]}
+                                          onPress={() => {
+                                              this.requestLunch();
+                                          }}>
+                            <Text style={styles.pillText}>
+                                Ланч в ресторане
+                            </Text>
+                        </TouchableOpacity>
                     </View>
-                    <Button warning full rounded style={styles.submit}
-                            onPress={() => {
-                                this.props.navigation.navigate('Order', {type: this.state.type})
-                            }}>
-                        <Text uppercase={false}>Оформить заказ</Text>
-                    </Button>
-                    <Text style={styles.mark}>Вы получите 12 баллов</Text>
+                    <Text style={styles.header}>Рестобар Chester </Text>
+                </View>}
+                <View style={styles.categoryList}>
+                    {result.length > 0 ?
+                        <CategoryList data={result}
+                                      basket={true}
+                                      navigation={this.props.navigation}
+                        /> :
+                        <View style={{alignItems: 'center', width: '100%', marginTop: 10}}>
+                            <Text style={{
+                                fontSize: 22,
+                                lineHeight: 33,
+                                textAlign: 'center'
+                            }}>Ваша корзина пуста</Text>
+
+                        </View>}
 
                 </View>
+
+                {result.length > 0 &&
+                <View>
+                    <View style={styles.clear}>
+                        <TouchableOpacity
+                            disabled={!result.length > 0}
+                            onPress={() => {
+                                this.setState({isOpenClearBasket: true})
+                            }}>
+                            <Text style={styles.clearText}>Очистить корзину</Text>
+                        </TouchableOpacity>
+                    </View>
+
+
+                    <View style={styles.bottom}>
+                        <View style={styles.price}>
+                            <Text style={styles.priceText}>{price} ₽</Text>
+                            <Text style={styles.priceTextDiscount}>{price * 0.8} ₽</Text>
+                        </View>
+                        <Button warning
+                                full
+                                rounded
+                                style={styles.submit}
+                                disabled={!result.length > 0}
+                                onPress={() => {
+                                    this.props.navigation.navigate('Order', {type: this.state.type})
+                                }}>
+                            <Text uppercase={false}>Оформить заказ</Text>
+                        </Button>
+                        <Text style={styles.mark}>Вы получите {Math.ceil(price* 0.02)} баллов</Text>
+
+                    </View>
+                </View>
+                }
 
 
             </ScrollView>
@@ -176,11 +180,14 @@ class BasketPage extends React.Component {
                         }>
                             <Text uppercase={false} style={modalCardStyles.buttonText}>Отмена</Text>
                         </Button>
-                        <Button danger rounded style={modalCardStyles.removeButton}>
-                            <Text uppercase={false} style={modalCardStyles.buttonText} onPress={() => {
-                                this.clearBasket();
-                            }
-                            }>Удалить</Text>
+                        <Button danger
+                                rounded
+                                style={modalCardStyles.removeButton}
+                                onPress={() => {
+                                    this.clearBasket();
+                                }
+                                }>
+                            <Text uppercase={false} style={modalCardStyles.buttonText}>Удалить</Text>
                         </Button>
                     </View>
 
@@ -217,13 +224,36 @@ class BasketPage extends React.Component {
 
         </Image>
     }
+
+    getAllDish(restaurantId) {
+        return this.props.restaurants[restaurantId].menu.categories
+            .reduce((a, b) => {
+                let items = [];
+                if (b.categories) {
+                    items = b.categories.reduce((a, subCategory) => {
+                        return a.concat(subCategory.items);
+                    }, [])
+                } else {
+                    items = b.items;
+                }
+                return a.concat(items);
+            }, []);
+    }
+
+
 }
 
 function bindAction(dispatch) {
-    return {};
+    return {
+        clearBasket: () => {
+            dispatch(clearBasket());
+        }
+    };
 }
+
 const mapStateToProps = state => ({
-    restaurants: state.restaurant.restaurants
+    restaurants: state.restaurant.restaurants,
+    billing: state.billing
 });
 const BasketPageSwag = connect(mapStateToProps, bindAction)(BasketPage);
 export default BasketPageSwag;

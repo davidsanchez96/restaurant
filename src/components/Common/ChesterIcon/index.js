@@ -6,6 +6,9 @@ import {View} from "native-base";
 let Icon = null;
 
 export default class ChesterIcon extends React.Component {
+
+
+
     state = {
         fontLoaded: false
     };

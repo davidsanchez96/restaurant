@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Icon, List, ListItem, Switch, Text, View} from 'native-base';
-import {Image, TouchableOpacity, ScrollView, Alert, TextInput} from "react-native";
+import {Image, TouchableOpacity, ScrollView, Alert, TextInput, LayoutAnimation} from "react-native";
 import platform from "../../../../native-base-theme/variables/platform";
 
 import {connect} from "react-redux";
@@ -20,7 +20,12 @@ const currentPlatform = Platform.OS;
 class FeedBackPageC extends React.Component {
 
     state = {
-        userData: {},
+        userData: {
+            first_name: '',
+            last_name: '',
+            email: ''
+        },
+        phone: '+7',
         anonymous: false
     };
 
@@ -35,8 +40,22 @@ class FeedBackPageC extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.user) {
+            this.setState({
+                userData: nextProps.user
+            });
+        }
+        if (nextProps.phone) {
+            this.setState({
+                phone: nextProps.phone
+            });
+        }
+
+    }
+
+    changeNumber(phone) {
         this.setState({
-            userData: nextProps.user
+            phone: phone
         });
     }
 
@@ -66,6 +85,11 @@ class FeedBackPageC extends React.Component {
 
                             <View style={{paddingVertical: 16}}>
                                 <Switch value={this.state.anonymous === 1} onValueChange={(push) => {
+
+                                    if (push) {
+                                        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                                    }
+
                                     this.setState({
                                         anonymous: push ? 1 : 0
                                     });
@@ -103,7 +127,7 @@ class FeedBackPageC extends React.Component {
                         <InputBlock name="Фамилия"
                                     keyboardAppearance="dark"
                                     autoCorrect={false}
-                                    value={this.props.user.last_name}
+                                    value={this.state.userData.last_name}
                                     onChangeText={(text) => {
                                         this.setState({
                                             userData: {
@@ -129,7 +153,7 @@ class FeedBackPageC extends React.Component {
                                 options={{mask: '+7 (999) 999-99-99'}}
                                 keyboardAppearance="dark"
                                 autoCorrect={false}
-                                value={this.props.phone}
+                                value={this.state.phone}
                                 underlineColorAndroid="transparent"
                                 onChangeText={(text) => {
                                     this.changeNumber(text)
@@ -207,8 +231,7 @@ class FeedBackPageC extends React.Component {
                     <View style={styles.buttonBlock}>
                         <Button warning rounded disabled={!(this.state.text && this.state.text.length > 0)}
                                 style={{width: '100%'}} onPress={() => {
-                            this.props.sendTicket(
-                                this.state)
+                            this.sendTicket(this.state);
                         }}>
                             <Text style={{textAlign: 'center', flex: 1}}>Отправить</Text>
                         </Button>
@@ -220,6 +243,47 @@ class FeedBackPageC extends React.Component {
 
 
         </Image>
+    }
+
+
+    async sendTicket(ticket) {
+
+        try {
+            let result = await this.props.sendTicket(
+                this.state);
+            setTimeout(() => {
+                Alert.alert(
+                    'Успешно.',
+                    'Ваш отзыв отправлен.',
+                    [
+
+                        {
+                            text: 'Ок', onPress: () => {
+                            this.props.navigation.navigate('Restaurant')
+                        }
+                        }
+                    ]
+                )
+            }, 100);
+        }
+        catch (ex) {
+            setTimeout(() => {
+                Alert.alert(
+                    'Ошибка отправки',
+                    'Попробуйте отправить позже.',
+                    [
+
+                        {
+                            text: 'Ок', onPress: () => {
+
+                        }
+                        }
+                    ]
+                )
+            }, 100);
+        }
+
+
     }
 
 

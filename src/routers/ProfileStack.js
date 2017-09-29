@@ -23,6 +23,7 @@ export default ProfileStack = StackNavigator({
             headerBackTitleStyle: {
                 color: "transparent"
             },
+            drawerLockMode:'locked-closed'
         })
     }
 }, {

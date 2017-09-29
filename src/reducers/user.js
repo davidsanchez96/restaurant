@@ -1,6 +1,9 @@
 import {
     CONFIRM_CODE_FULFILLED,
-    CONFIRM_CODE_PENDING, CONFIRM_CODE_REJECTED, GET_USER_DATA, GET_USER_DATA_FULFILLED,
+    CONFIRM_CODE_PENDING, CONFIRM_CODE_REJECTED, GET_TABLE_RESERVES, GET_TABLE_RESERVES_FULFILLED,
+    GET_TABLE_RESERVES_PENDING,
+    GET_TABLE_RESERVES_REJECTED, GET_USER_DATA,
+    GET_USER_DATA_FULFILLED,
     SEND_CODE_FULFILLED, SEND_CODE_PENDING, SEND_CODE_REJECTED, SEND_TICKET, SEND_TICKET_FULFILLED, SEND_TICKET_PENDING,
     SEND_TICKET_REJECTED,
     SET_SIGN_STATE,
@@ -11,15 +14,16 @@ import moment from "moment";
 
 export type State = {
     name: string,
-    phoneNumber: string,
+    phone: string,
     logged: boolean
 }
 
 const initialState = {
     name: '',
-    phoneNumber: '',
+    phone: '',
     logged: false,
-    showSign: true
+    showSign: true,
+    history: null
 };
 
 export default function (state: State = initialState, action) {
@@ -33,7 +37,9 @@ export default function (state: State = initialState, action) {
         return {
             ...state,
             token: null,
+            phone: '',
             logged: false,
+            isAuth: false
         };
     }
     if (action.type === SET_SIGN_STATE) {
@@ -54,7 +60,8 @@ export default function (state: State = initialState, action) {
     if (action.type === SEND_CODE_PENDING) {
         return {
             ...state,
-            sendCodePending: true
+            sendCodePending: true,
+            logged: false
         };
     }
     if (action.type === SEND_CODE_REJECTED) {
@@ -68,6 +75,7 @@ export default function (state: State = initialState, action) {
             ...state,
             sent: moment(),
             confirmCodePending: false,
+            logged: true,
             showSign: false
         };
     }
@@ -113,21 +121,45 @@ export default function (state: State = initialState, action) {
     if (action.type === SEND_TICKET_PENDING) {
         return {
             ...state,
-            sendTicketPending: true
+            sendTicketPending: true,
         };
     }
 
     if (action.type === SEND_TICKET_FULFILLED) {
         return {
             ...state,
-            sendTicketPending: false
+            sendTicketPending: false,
         };
     }
 
     if (action.type === SEND_TICKET_REJECTED) {
         return {
             ...state,
-            sendTicketPending: false
+            sendTicketPending: false,
+        };
+    }
+
+
+    if (action.type === GET_TABLE_RESERVES_PENDING) {
+        return {
+            ...state,
+            getHistoryPending: true,
+        };
+    }
+
+    if (action.type === GET_TABLE_RESERVES_FULFILLED) {
+        return {
+            ...state,
+            history: action.payload,
+            getHistoryPending: false,
+        };
+    }
+
+    if (action.type === GET_TABLE_RESERVES_REJECTED) {
+        return {
+            ...state,
+            history: null,
+            getHistoryPending: false,
         };
     }
 

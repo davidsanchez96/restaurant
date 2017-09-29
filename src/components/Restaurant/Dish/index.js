@@ -7,32 +7,35 @@ import {Image, ScrollView, TouchableOpacity, Dimensions, Platform} from "react-n
 import platform from "../../../../native-base-theme/variables/platform";
 import ChesterIcon from "../../Common/ChesterIcon/index";
 import {signStackStyle} from "../../../routers/SignStack";
-import Collapsible from 'react-native-collapsible';
-import SearchInput from "../common/SearchInput/index";
 import {LinearGradient, Svg, Constants} from "expo";
+import {addDish, initBasket, removeDish} from "../../../actions/billing";
+import {connect} from "react-redux";
 
 
-export default class Dish extends React.Component {
+export class DishC extends React.Component {
     static navigationOptions = ({navigation, screenProps}) => ({
         title: navigation.state.params.name
     });
 
+    constructor(props) {
+        super(props);
+        this.restaurantId = props.navigation.state.params.restaurantId;
+        this.dish = props.navigation.state.params.dish;
+    }
+
 
     addItem(item) {
-
-
-        this.setState({count: this.state.count + 1});
-
-
+        if (this.props.billing.restaurantId !== this.restaurantId) {
+            this.props.initBasket(this.restaurantId);
+        }
+        this.props.addDish(this.dish);
     }
 
     minusItem(item) {
-        this.setState({count: this.state.count - 1});
-
+        this.props.removeDish(this.dish);
     }
 
     state = {
-        count: 0,
         like: false
     };
 
@@ -40,9 +43,10 @@ export default class Dish extends React.Component {
         this.setState({like: !this.state.like});
     }
 
-    render() {
-        let dish = this.props.navigation.state.params.dish;
 
+    render() {
+        let dish = this.dish;
+        this.restaurantId = dish.restaurant_id;
 
         let enabled = Object.keys(dish.badges).map((key) => {
             return dish.badges[key]
@@ -51,7 +55,11 @@ export default class Dish extends React.Component {
         let hot = enabled.find(item => item === 'острое');
         let newDish = enabled.find(item => item === 'новое блюдо');
 
-
+        let savedDish = this.props.billing.dishes.find(item => item.id === dish.id);
+        let countDish = 0;
+        if (savedDish) {
+            countDish = savedDish.count;
+        }
         return (
 
             <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
@@ -138,7 +146,7 @@ export default class Dish extends React.Component {
 
 
                                 {
-                                    this.state.count === 0
+                                    countDish === 0
                                         ?
 
                                         <Button warning rounded style={{flex: 1, justifyContent: 'center'}}
@@ -162,7 +170,7 @@ export default class Dish extends React.Component {
                                                 this.addItem()
                                             }}>
                                                 <Text
-                                                    style={styles.counterItemButtonText}> {this.state.count}</Text>
+                                                    style={styles.counterItemButtonText}> {countDish}</Text>
                                             </TouchableOpacity>
 
                                             <View style={styles.plusItemButton}>
@@ -194,6 +202,26 @@ export default class Dish extends React.Component {
     }
 }
 
+function bindAction(dispatch) {
+    return {
+        addDish: (dish) => {
+            dispatch(addDish(dish));
+        },
+        removeDish: (dish) => {
+            dispatch(removeDish(dish));
+        },
+        initBasket: (restaurantId) => {
+            dispatch(initBasket(restaurantId));
+        }
+    };
+}
+
+const mapStateToProps = state => ({
+    billing: state.billing
+});
+
+const Dish = connect(mapStateToProps, bindAction)(DishC);
+export default Dish;
 
 const styles = {
     container: {

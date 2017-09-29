@@ -29,6 +29,12 @@ export const SEND_TICKET_PENDING = 'SEND_TICKET_PENDING';
 export const SEND_TICKET_FULFILLED = 'SEND_TICKET_FULFILLED';
 export const SEND_TICKET_REJECTED = 'SEND_TICKET_REJECTED';
 
+export const GET_TABLE_RESERVES = 'GET_TABLE_RESERVES';
+export const GET_TABLE_RESERVES_PENDING = 'GET_TABLE_RESERVES_PENDING';
+export const GET_TABLE_RESERVES_FULFILLED = 'GET_TABLE_RESERVES_FULFILLED';
+export const GET_TABLE_RESERVES_REJECTED = 'GET_TABLE_RESERVES_REJECTED';
+
+
 const delay = (ms) => new Promise(resolve =>
     setTimeout(resolve, ms)
 );
@@ -123,6 +129,21 @@ export const sendTicket = (data) => {
     return dispatch => {
         let promise = AuthService.sendTicket(data);
         dispatch(sendTicketAction(promise));
+        return promise;
+    }
+};
+
+export function getTableReservesAction(promise) {
+    return {
+        type: GET_TABLE_RESERVES,
+        payload: promise
+    }
+}
+
+export const getTableReserves = () => {
+    return dispatch => {
+        let promise = AuthService.getTableReserves();
+        dispatch(getTableReservesAction(promise));
         return promise;
     }
 };

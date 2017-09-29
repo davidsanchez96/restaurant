@@ -11,6 +11,7 @@ import TimeService from "../../../services/TimeService";
 import {Drawer} from 'native-base';
 import {CustomNavigationDrawerSwag} from "../../../routers/NavigationDrawer";
 import {getRestaurants} from "../../../actions/restaurant";
+
 class Restaurants extends React.Component {
 
     updateSchedule() {
@@ -36,6 +37,7 @@ class Restaurants extends React.Component {
 
     _renderItem = ({item}) => {
         return <TouchableOpacity onPress={() => {
+
             this.props.navigation.navigate('Restaurant', {key: item.id})
         }}>
 

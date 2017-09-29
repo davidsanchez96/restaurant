@@ -94,8 +94,8 @@ export default class SelectDate extends React.Component {
         let hours = [];
         if (date.format('ddd D MMMM') === moment().format('ddd D MMMM')) {
             let currentDate = date;
-            if (currentHour < 9 || (currentHour === 9 && currentMinute <= 30)) {
-                currentDate = moment().floor(24, 'hours').add(10, 'hours');
+            if (currentHour < 11 || (currentHour === 11 && currentMinute <= 30)) {
+                currentDate = moment().floor(24, 'hours').add(12, 'hours');
             }
             else {
                 currentDate = moment().ceil(30, 'minutes');
@@ -113,7 +113,7 @@ export default class SelectDate extends React.Component {
 
         }
         else {
-            let currentDate = date.clone().floor(24, 'hours').add(10, 'hours');
+            let currentDate = date.clone().floor(24, 'hours').add(12, 'hours');
             let end = date.clone().floor(24, 'hours').add(23, 'hours').add(30, 'minutes');
             while (currentDate <= end) {
                 currentDate = currentDate.clone();

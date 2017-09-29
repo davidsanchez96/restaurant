@@ -24,6 +24,7 @@ export default NewsStack = StackNavigator({
             headerBackTitleStyle: {
                 color: "transparent"
             },
+            drawerLockMode:'locked-closed'
         })
     }
 }, {

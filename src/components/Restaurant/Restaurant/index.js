@@ -9,8 +9,11 @@ import RestaurantContact from "../common/RestaurantContact/index";
 import {connect} from "react-redux";
 import ImageSlider from "react-native-image-slider";
 
-class Restaurant extends React.Component {
 
+class Restaurant extends React.Component {
+    static navigationOptions = ({navigation, screenProps}) => ({
+        title: navigation.state.params.title
+    });
 
     state = {
         position: 1,
@@ -29,8 +32,17 @@ class Restaurant extends React.Component {
         clearInterval(this.state.interval);
     }
 
+    static restaurantKey = null;
+
     render() {
 
+
+        if (!this.props.navigation.state.params || !this.props.navigation.state.params.key) {
+
+            this.props.navigation.state.params = {key: Restaurant.restaurantKey}
+        }
+
+        Restaurant.restaurantKey = this.props.navigation.state.params.key;
         let restaurant = this.props.restaurants[this.props.navigation.state.params.key];
         return (
 

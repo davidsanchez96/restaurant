@@ -94,7 +94,7 @@ class Profile extends React.Component {
                         <InputBlock name="Фамилия"
                                     keyboardAppearance="dark"
                                     autoCorrect={false}
-                                    value={this.props.user.last_name}
+                                    value={this.state.userData.last_name}
                                     onChangeText={(text) => {
                                         this.setState({
                                             userData: {

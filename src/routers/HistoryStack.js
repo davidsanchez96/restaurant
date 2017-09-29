@@ -29,7 +29,8 @@ export default ProfileStack = StackNavigator({
             },
             headerTitleStyle: {
                 ...BaseNavigationBarStyle.headerTitleStyle
-            }
+            },
+            drawerLockMode:'locked-closed'
         }
     },
     ScanBillHistory: {
@@ -43,7 +44,8 @@ export default ProfileStack = StackNavigator({
             },
             headerTitleStyle: {
                 ...BaseNavigationBarStyle.headerTitleStyle
-            }
+            },
+            drawerLockMode:'locked-closed'
         }
     },
     LunchHistory: {
@@ -71,7 +73,8 @@ export default ProfileStack = StackNavigator({
             },
             headerTitleStyle: {
                 ...BaseNavigationBarStyle.headerTitleStyle
-            }
+            },
+            drawerLockMode:'locked-closed'
         }
     },
     BuyByBonusHistory: {
@@ -85,7 +88,8 @@ export default ProfileStack = StackNavigator({
             },
             headerTitleStyle: {
                 ...BaseNavigationBarStyle.headerTitleStyle
-            }
+            },
+            drawerLockMode:'locked-closed'
         }
     }
 }, {

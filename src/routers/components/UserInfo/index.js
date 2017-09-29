@@ -45,22 +45,16 @@ class UserInfo extends React.Component {
             return (<View style={styles.container}>
 
                 <View style={styles.avatarOuter}>
-                    <TouchableOpacity onPress={this._pickImage}>
-                        <View style={styles.avatarInner}>
+                    <View style={styles.avatarInner}>
 
-                            <Image source={require('../../../../assets/images/navigation/user_icon.png')}
-                                   style={{width: 48, resizeMode: 'contain'}}/>
-                        </View>
-                    </TouchableOpacity>
+                        <Image source={require('../../../../assets/images/navigation/user_icon.png')}
+                               style={{width: 48, resizeMode: 'contain'}}/>
+                    </View>
                 </View>
 
-                <TouchableOpacity onPress={() => {
 
-                    this.props.navigation.navigate('Profile')
-                }
-                }>
-                    <Text style={styles.bottomAvatarText}>Ваш аккаунт</Text>
-                </TouchableOpacity>
+                <Text style={styles.bottomAvatarText}>Ваш аккаунт</Text>
+
                 <View>
                     <Button style={styles.button} rounded warning onPress={() => {
                         this.props.signIn()
@@ -96,7 +90,7 @@ function bindAction(dispatch) {
 }
 
 const mapStateToProps = state => ({
-    logged: state.user.token,
+    logged: state.user.logged,
 });
 
 

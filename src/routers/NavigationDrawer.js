@@ -10,21 +10,21 @@ import UserInfo from "./components/UserInfo/index";
 import platform from "../../native-base-theme/variables/platform";
 import ChesterIcon from "../components/Common/ChesterIcon/index";
 import ProfileStack from "./ProfileStack";
-import BasketStack from "./BasketStack";
 import HistoryStack from "./HistoryStack";
 import NewsStack from "./NewsStack";
-import FeedBackPage from "../components/FeedBack/FeedBackPage/index";
 import FeedBackStack from "./FeedBackStack";
+import MyCardStack from "./MyCardStack";
 
 export default NavigationDrawer = DrawerNavigator({
         Restaurant: {
             screen: RestaurantsStack,
             navigationOptions: {
-                title: 'Рестораны'
+                title: 'Рестораны',
+                lockMode: 'locked-closed'
             }
         },
-        News1: {
-            screen: RestaurantsStack,
+        MyCard: {
+            screen: MyCardStack,
             navigationOptions: {
                 title: 'Моя карта'
             }

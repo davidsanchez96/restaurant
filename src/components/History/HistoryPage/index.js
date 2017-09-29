@@ -1,12 +1,13 @@
 import React from 'react';
 import {connect} from "react-redux";
 
-import {FlatList, Image, ScrollView, TouchableOpacity} from "react-native";
+import {FlatList, Image, RefreshControl, ScrollView, TouchableOpacity} from "react-native";
 import moment from "moment";
 import {Text, View, Icon, Button} from "native-base";
 import Swipeout from "react-native-swipeout";
 import platform from "../../../../native-base-theme/variables/platform";
 import {signStackStyle} from "../../../routers/SignStack";
+import {getTableReserves} from "../../../actions/user";
 
 
 class HistoryPage extends React.Component {
@@ -16,33 +17,34 @@ class HistoryPage extends React.Component {
 
     componentWillMount() {
 
+        this.props.getTableReserves()
     }
 
     componentWillUnmount() {
 
     }
 
-    openHistory(history, title) {
+    openHistory(item, title) {
 
-        switch (history.type) {
-            case 0: {
-                this.props.navigation.navigate('BookTableHistory', {name: title, history: history});
-                break;
-            }
-            case 1: {
-                this.props.navigation.navigate('TakeAwayOrderHistory', {name: title, history: history});
-                break;
-            }
+        switch (item.type) {
             case 2: {
-                this.props.navigation.navigate('ScanBillHistory', {name: title, history: history});
+                this.props.navigation.navigate('ScanBillHistory', {name: title, history: item});
                 break;
             }
             case 3: {
-                this.props.navigation.navigate('LunchHistory', {name: title, history: history});
+                this.props.navigation.navigate('BookTableHistory', {name: title, history: item});
                 break;
             }
             case 4: {
-                this.props.navigation.navigate('BuyByBonusHistory', {name: title, history: history});
+                this.props.navigation.navigate('TakeAwayOrderHistory', {name: title, history: item});
+                break;
+            }
+            case 7: {
+                this.props.navigation.navigate('LunchHistory', {name: title, history: item});
+                break;
+            }
+            case 8: {
+                this.props.navigation.navigate('BuyByBonusHistory', {name: title, history: item});
                 break;
             }
         }
@@ -58,10 +60,8 @@ class HistoryPage extends React.Component {
         switch (item.type) {
             case 0: {
                 title = "Бронирование стола";
-                break;
-            }
-            case 1: {
-                title = "Заказ на вынос";
+
+
                 break;
             }
             case 2: {
@@ -69,14 +69,23 @@ class HistoryPage extends React.Component {
                 break;
             }
             case 3: {
-                title = "Ланч в ресторане";
+                title = "Бронирование стола";
                 break;
             }
             case 4: {
+                title = "Заказ на вынос";
+                break;
+            }
+            /*case 5: {
                 title = "Покупка за баллы";
+                break;
+            }*/
+            case 7: {
+                title = "Ланч в ресторане";
                 break;
             }
         }
+
         let swipeoutBtns = [
             {
                 onPress: () => {
@@ -97,6 +106,16 @@ class HistoryPage extends React.Component {
         let bonusText = bonus + ' ' + 'бал.';
 
 
+        let date = item.created_at;
+        if (item.type === 3) {
+            bonusText = item.result_data.people_quantity + ' чел.';
+            date = item.result_data.timestamp;
+        }
+
+
+        let restaurant= this.props.restaurants[item.restaurant_id];
+        let restaurantName = restaurant.title_short;
+
         return (
 
             <Swipeout backgroundColor={'#2B3034'} right={swipeoutBtns} buttonWidth={88}
@@ -109,15 +128,15 @@ class HistoryPage extends React.Component {
                         <View style={styles.listItemBody}>
                             <Text style={styles.listItemHeader}>{title}</Text>
                             <View style={styles.listItemPointBlock}>
-                                <Text style={styles.listItemPointText}>{moment(item.date).format('D MMM, HH:mm')}</Text>
-                                {item.type !== 4 && <View style={styles.listItemPriceBlock}>
+                                <Text style={styles.listItemPointText}>{moment(date).format('D MMM, HH:mm')}</Text>
+                                {item.type !== 5 && item.type !== 3 && <View style={styles.listItemPriceBlock}>
                                     <View style={styles.infoPoint}/>
                                     <Text style={styles.listItemPointText}>{item.price + ' ₽'}</Text>
                                 </View>}
                                 <View style={styles.infoPoint}/>
                                 <Text style={styles.listItemPointText}>{bonusText}</Text>
                             </View>
-                            <Text style={styles.listItemRestaurant}>{item.restaurant}</Text>
+                            <Text style={styles.listItemRestaurant}>{restaurantName}</Text>
                         </View>
                         <Icon style={styles.listItemIcon} name="arrow-forward"/>
                     </View>
@@ -127,56 +146,18 @@ class HistoryPage extends React.Component {
         )
     };
 
+    capitalize(s) {
+        return s[0].toUpperCase() + s.slice(1);
+    }
+
     render() {
 
 
-        let data = [
-            {
-                id: 1,
-                type: 1,
-                price: 200,
-                date: moment(),
-                restaurant: 'Росторан в метрополис',
-                bonus: 20,
-                dateOrder: moment(),
-            },
-            {
-                id: 2,
-                type: 1,
-                price: 200,
-                date: moment(),
-                restaurant: 'Росторан в метрополис',
-                bonus: 20,
-                dateOrder: moment(),
-            },
-            {
-                id: 3,
-                type: 3,
-                price: 200,
-                date: moment(),
-                restaurant: 'Росторан в метрополис',
-                bonus: 20,
-                dateOrder: moment(),
-            },
-            {
-                id: 4,
-                type: 2,
-                price: 200,
-                date: moment(),
-                restaurant: 'Росторан в метрополис',
-                bonus: 20,
-                dateOrder: moment(),
-            },
-            {
-                id: 5,
-                type: 4,
-                price: 200,
-                date: moment(),
-                restaurant: 'Росторан в метрополис',
-                bonus: 20,
-                dateOrder: moment(),
-            },
-            {
+        let empty = !this.props.history || this.props.history.list.length === 0;
+
+
+        if (empty) {
+            let k = {
                 id: 6,
                 type: 0,
                 price: 200,
@@ -185,32 +166,54 @@ class HistoryPage extends React.Component {
                 bonus: 20,
                 dateOrder: moment(),
             }
-        ];
+        }
 
 
         return <Image source={require('../../../../assets/images/background/background.png')} style={signStackStyle}>
 
-            <FlatList
-                style={styles.list}
-                data={data}
-                extraData={this.state}
-                keyExtractor={this._keyExtractor}
-                renderItem={this._renderItem}
-                ListHeaderComponent={() => (<View style={styles.listHeader}/>)}
-                ListFooterComponent={() => (<View style={styles.listFooter}/>)}
-            />
+            {!empty
+                ? <FlatList
+                    style={styles.list}
+                    data={this.props.history.list}
+                    extraData={this.state}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={this._renderItem}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.props.isPending}
+                            onRefresh={()=>{this.onRefresh()}}
+                            tintColor="#fff"
+                            titleColor="#fff"
+                        />
+                    }
+                    ListHeaderComponent={() => (<View style={styles.listHeader}/>)}
+                    ListFooterComponent={() => (<View style={styles.listFooter}/>)}
+                />
+                : <Text>История пуста</Text>}
 
 
         </Image>
     }
+
+
+    onRefresh()
+    {
+        this.props.getTableReserves()
+    }
 }
 
 function bindAction(dispatch) {
-    return {};
+    return {
+        getTableReserves: () => {
+            dispatch(getTableReserves());
+        }
+    };
 }
 
 const mapStateToProps = state => ({
-    restaurants: state.restaurant.restaurants
+    restaurants: state.restaurant.restaurants,
+    history: state.user.history,
+    isPending: state.user.getHistoryPending
 });
 const HistoryPageSwag = connect(mapStateToProps, bindAction)(HistoryPage);
 export default HistoryPageSwag;

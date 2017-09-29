@@ -12,6 +12,7 @@ import BasketPage from "../components/Basket/BasketPage";
 import OrderPage from "../components/Basket/OrderPage";
 import CloseIcon from "./components/CloseIcon/index";
 import {View} from "native-base";
+import SignSecondStepSwag from "../components/SignIn/SignSecondStep/index";
 
 export default RestaurantsStack = StackNavigator({
     Restaurants: {
@@ -37,7 +38,8 @@ export default RestaurantsStack = StackNavigator({
                 borderBottomWidth: 0,
                 borderWidth: 0,
                 zIndex: 0
-            }
+            },
+            drawerLockMode: 'locked-closed',
         }
     },
     Category: {
@@ -49,10 +51,11 @@ export default RestaurantsStack = StackNavigator({
             headerStyle: {
                 ...BaseNavigationBarStyle.headerStyle
             },
-            headerTitleStyle : {
+            headerTitleStyle: {
                 ...BaseNavigationBarStyle.headerTitleStyle,
-                marginHorizontal:0
-            }
+                marginHorizontal: 0
+            },
+            drawerLockMode: 'locked-closed',
         }
     },
     Dish: {
@@ -67,10 +70,11 @@ export default RestaurantsStack = StackNavigator({
                 shadowOpacity: 0,
                 shadowRadius: 0
             },
-            headerTitleStyle : {
+            headerTitleStyle: {
                 ...BaseNavigationBarStyle.headerTitleStyle,
-                marginHorizontal:0
-            }
+                marginHorizontal: 0
+            },
+            drawerLockMode: 'locked-closed',
         }
     },
     BookTableConfirm: {
@@ -84,6 +88,21 @@ export default RestaurantsStack = StackNavigator({
             headerLeft: <CloseIcon {...props} />,
             headerRight: <View></View>,
             headerStyle: BaseNavigationBarStyle.headerStyle,
+            drawerLockMode: 'locked-closed'
+        })
+    },
+    BookTableConfirmCode: {
+        screen: SignSecondStepSwag,
+        navigationOptions: props => ({
+            title: 'Подтвердите телефон',
+            headerBackTitleStyle: {
+                color: "transparent"
+            },
+
+            headerLeft: <CloseIcon {...props} />,
+            headerRight: <View></View>,
+            headerStyle: BaseNavigationBarStyle.headerStyle,
+            drawerLockMode: 'locked-closed',
 
         })
     },
@@ -92,7 +111,8 @@ export default RestaurantsStack = StackNavigator({
         navigationOptions: props => ({
             title: 'Корзина',
             headerLeft: <CloseIcon {...props} />,
-            headerRight: <View></View>
+            headerRight: <View></View>,
+            drawerLockMode: 'locked-closed',
         })
     },
     Order: {
@@ -103,10 +123,11 @@ export default RestaurantsStack = StackNavigator({
                 color: "transparent"
             },
             headerRight: <View></View>,
-            headerTitleStyle : {
+            headerTitleStyle: {
                 ...BaseNavigationBarStyle.headerTitleStyle,
-                marginHorizontal:0
-            }
+                marginHorizontal: 0
+            },
+            drawerLockMode: 'locked-closed',
         })
     }
 }, {

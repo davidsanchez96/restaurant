@@ -12,6 +12,8 @@ import SelectDate from "./SelectDate";
 import moment from "moment";
 import 'moment-round'
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {getTime} from "../../../actions/restaurant";
+import restaurant from "../../../reducers/restaurant";
 
 
 class BookTable extends React.Component {
@@ -19,15 +21,15 @@ class BookTable extends React.Component {
 
     state = {
         isOpen: false,
-        count:2
+        count: 2
     };
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         let currentHour = parseInt(moment().format('H'));
         let currentMinute = parseInt(moment().format('m'));
-        if (currentHour < 10) {
-            this.state.date = moment().floor(24, 'hours').add(10, 'hours');
+        if (currentHour < 12) {
+            this.state.date = moment().floor(24, 'hours').add(12, 'hours');
         }
         else if (currentHour < 23 || (currentHour === 23 && currentMinute <= 30)) {
 
@@ -39,31 +41,24 @@ class BookTable extends React.Component {
             }
         }
         else {
-            this.state.date = moment().ceil(24, 'hours').add(10, 'hours');
+            this.state.date = moment().ceil(24, 'hours').add(12, 'hours');
         }
 
-
+        this.restaurant = props.restaurants[this.props.navigation.state.params.key];
         this.state.count = 2;
     }
 
 
-    getCurrentSelectionTabs() {
-        let startDate = this.state.date.clone().add(-30, 'minutes');
-        let result = [];
-        for (let i = 0; i < 5; i++) {
-            result.push({
-                label: startDate.format('HH:mm'),
-                value: startDate.clone()
-            });
-            startDate.add(15, 'minutes');
-        }
-        return result;
+    componentDidMount() {
+        this.props.getTime(this.restaurant.id, {
+            people_quantity: this.state.count,
+            timestamp: this.state.date.unix()
+        })
     }
 
 
     render() {
 
-        let restaurant = this.props.restaurants[this.props.navigation.state.params.key];
 
         return (
 
@@ -73,16 +68,15 @@ class BookTable extends React.Component {
                 <View style={styles.container}>
 
 
-                    <Container >
+                    <Container>
+
                         <Content>
                             <View style={{paddingHorizontal: 16, marginBottom: 20}}>
                                 <Text style={styles.header}>
-
                                     Бронирование стола
-
                                 </Text>
                                 <Text style={styles.restaurantName}>
-                                    {restaurant.title_full}
+                                    {this.restaurant.title_full}
                                 </Text>
 
                             </View>
@@ -91,25 +85,48 @@ class BookTable extends React.Component {
                                 date={this.state.date}
                                 count={this.state.count}
                                 onDateSelected={(selected) => {
+
+                                    this.props.getTime(this.restaurant.id, {
+                                        people_quantity: selected.count,
+                                        timestamp: selected.date.unix()
+                                    });
+
                                     this.setState({date: selected.date, count: selected.count});
                                 }}/>
 
                             <View style={styles.timeSheet}>
                                 <Text style={styles.timeSheetHint}>Забронируйте столик на удобное вам время:</Text>
+
+
                                 <ScrollView horizontal style={{paddingBottom: 22, paddingTop: 14}}>
                                     <View style={{flexDirection: 'row'}}>
+
                                         {
-                                            this.getCurrentSelectionTabs().map((item, i) => {
-                                                return <TouchableOpacity style={styles.timeButton} key={i}
-                                                                         onPress={() => {
-                                                                             this.props.navigation.navigate('BookTableConfirm')
-                                                                         }}>
-                                                    <Text style={styles.timeButtonText}>
-                                                        {item.label}
-                                                    </Text>
-                                                </TouchableOpacity>
+                                            this.getTimeSheet().map(time => {
+
+                                                if (time.state === 'enabled') {
+                                                    return <TouchableOpacity style={styles.timeButton}
+                                                                             key={time.timestamp}
+                                                                             onPress={() => {
+                                                                                 this.navigateToBook(time)
+                                                                             }}>
+                                                        <Text style={styles.timeButtonText}>
+                                                            {moment.unix(time.timestamp).format('HH:mm')}
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                }
+                                                else {
+                                                    return <View style={styles.timeButtonFill} key={time.timestamp}
+                                                    >
+                                                        <Text style={styles.timeButtonFillText}>
+                                                            {time.title}
+                                                        </Text>
+                                                    </View>
+                                                }
                                             })
                                         }
+
+
                                     </View>
                                 </ScrollView>
                             </View>
@@ -122,13 +139,34 @@ class BookTable extends React.Component {
             </Image>
         );
     }
+
+
+    getTimeSheet() {
+        return this.props.timeSheet.filter(time => {
+            return time.timestamp > this.state.date.unix();
+        })
+    }
+
+    navigateToBook(time) {
+        this.props.navigation.navigate('BookTableConfirm', {
+            time: time,
+            restaurant: this.restaurant,
+            people_quantity: this.state.count
+        })
+    }
 }
 
 function bindAction(dispatch) {
-    return {};
+    return {
+        getTime: (restaurantId, data) => {
+            return dispatch(getTime(restaurantId, data))
+        }
+    };
 }
+
 const mapStateToProps = state => ({
-    restaurants: state.restaurant.restaurants
+    restaurants: state.restaurant.restaurants,
+    timeSheet: state.restaurant.timeSheet
 });
 const BookTableSwag = connect(mapStateToProps, bindAction)(BookTable);
 export default BookTableSwag;
@@ -158,7 +196,7 @@ const styles = {
     },
     timeSheet: {
         paddingTop: 13,
-        marginTop:19,
+        marginTop: 19,
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderColor: platform.brandDivider,

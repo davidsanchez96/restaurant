@@ -44,20 +44,24 @@ export default class HistoryShortInfo extends React.Component {
                 title = "Бронирование стола";
                 break;
             }
-            case 1: {
-                title = "Заказ на вынос";
-                break;
-            }
             case 2: {
                 title = "Сканирование чека";
                 break;
             }
             case 3: {
-                title = "Ланч в ресторане";
+                title = "Бронирование стола";
                 break;
             }
             case 4: {
+                title = "Заказ на вынос";
+                break;
+            }
+            /*case 5: {
                 title = "Покупка за баллы";
+                break;
+            }*/
+            case 7: {
+                title = "Ланч в ресторане";
                 break;
             }
         }
